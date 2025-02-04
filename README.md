@@ -8,4 +8,4 @@ you should now that I appreciate you a lot for reading this text!
 have a nice day
 <3
 
-this project is about shooting people. are we   americans? No but it only a game in python (ouf we werre scared for a sec).
+This project is about shooting people by the way... Are we americans? No but it's only a game in python (ouf we werre scared for a sec).
