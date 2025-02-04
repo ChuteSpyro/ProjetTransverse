@@ -1,7 +1,7 @@
 # ProjetTransverse
 Bonjour,
-sache tout d'abord que je t'apprécie beaucoup pour lire ce message!
-Bonne journée.
+sache tout d'abord que je t'apprécie beaucoup pour lire ce message et que tu es une personne magnifique!
+Je te souhaite une excellente journée.
 
 Hello world, 
 you should now that I appreciate you a lot for reading this text!
