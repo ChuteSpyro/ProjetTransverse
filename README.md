@@ -2,7 +2,8 @@
 Bonjour,
 sache tout d'abord que je t'apprécie beaucoup pour lire ce message!
 Bonne journée.
-hello worl 
+
+Hello world, 
 you should now that I appreciate you a lot for reading this text!
 have a nice day
 <3
