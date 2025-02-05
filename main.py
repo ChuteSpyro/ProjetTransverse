@@ -1,36 +1,30 @@
 import pygame
+from game import Game
+
+
 pygame.init()
-
-class Player(pygame.sprite.Sprite) :
-    def __init__(self):
-        super().__init__()
-        self.health = 100
-        self.max_health = 100
-        self.image = pygame.image.load('assets/player.png')
-        self.rect = self.image.get_rect()
-
-class Master(pygame.sprite.Sprite) :
-    def __init__(self):
-        super().__init__()
-        self.health = 100
-        self.max_health = 100
-        self.image = pygame.image.load('assets/mummy.png')
-        self.rect = self.image.get_rect()
-
 
 pygame.display.set_caption("Simple Game")
 screen = pygame.display.set_mode((1080,720))
 
 background = pygame.image.load("assets/bg.jpg")
 
-player = Player()
+game = Game()
+
 
 runnig = True
 while runnig:
 
     screen.blit(background, (0, -200))
 
-    screen.blit(player, (0, -200))
+    screen.blit(game.player.image, game.player.rect)
+    screen.blit(game.master.image, game.master.rect)
+
+    for projectile in game.player.all_projectiles:
+        projectile.move()
+
+
+    game.player.all_projectiles.draw(screen)
 
     pygame.display.flip()
 
@@ -39,3 +33,10 @@ while runnig:
             runnig = False
             pygame.quit()
             print("fermeture du jeu")
+        elif event.type == pygame.KEYDOWN:
+            game.pressed[event.key] = True
+
+
+            if event.key == pygame.K_RETURN:
+                game.player.launch_projectile()
+
