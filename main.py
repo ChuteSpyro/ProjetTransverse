@@ -12,8 +12,8 @@ background = pygame.image.load("assets/bg.jpg")
 game = Game()
 
 
-runnig = True
-while runnig:
+running = True
+while running:
 
     screen.blit(background, (0, -200))
 
@@ -23,6 +23,7 @@ while runnig:
     for projectile in game.player.all_projectiles:
         projectile.move()
 
+    game.master.update_health_bar(screen)
 
     game.player.all_projectiles.draw(screen)
 
@@ -30,9 +31,9 @@ while runnig:
 
     for event in pygame.event.get() :
         if event.type == pygame.QUIT:
-            runnig = False
+            running = False
             pygame.quit()
-            print("fermeture du jeu")
+            print("fermeture du jeu mouahaha, looser !")
         elif event.type == pygame.KEYDOWN:
             game.pressed[event.key] = True
 
