@@ -4,7 +4,7 @@ from master import Master
 
 class Game:
     def __init__(self):
-        self.player = Player(self)
+        self.player = Player()
         self.master = Master()
         self.pressed = {}
 
