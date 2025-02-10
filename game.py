@@ -4,8 +4,14 @@ from master import Master
 
 class Game:
     def __init__(self):
-        self.player = Player()
-        self.master = Master()
+        self.all_player = pygame.sprite.Group()
+        self.player = Player(self)
+        self.all_player.add(self.player)
+
+        self.all_master = pygame.sprite.Group()
+        self.master = Master(self)
+        self.all_master.add(self.master)
+
         self.pressed = {}
 
     def check_collision(self, prite, group):
