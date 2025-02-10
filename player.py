@@ -11,7 +11,7 @@ class Player(pygame.sprite.Sprite) :
         self.all_projectiles = pygame.sprite.Group()
         self.image = pygame.image.load('assets/player.png')
         self.rect = self.image.get_rect()
-        self.rect.x = 0
+        self.rect.x = 10
         self.rect.y = 510
 
     def launch_projectile(self):
