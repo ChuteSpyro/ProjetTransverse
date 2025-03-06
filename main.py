@@ -1,5 +1,6 @@
 import pygame
 from game import Game
+from character_selection import select_character
 
 
 pygame.init()
@@ -8,6 +9,8 @@ pygame.display.set_caption("Simple Game")
 screen = pygame.display.set_mode((1080,720))
 
 background = pygame.image.load("assets/bg.jpg")
+
+selected_character = select_character(screen)
 
 game = Game()
 
