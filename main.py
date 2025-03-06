@@ -13,18 +13,19 @@ background = pygame.image.load("assets/bg.jpg")
 selected_character = select_character(screen)
 
 game = Game()
-
+clock = pygame.time.Clock()
 
 running = True
 while running:
 
+    dt = clock.tick(60) / 1000.0
     screen.blit(background, (0, -200))
 
     screen.blit(game.player.image, game.player.rect)
     screen.blit(game.master.image, game.master.rect)
 
     for projectile in game.player.all_projectiles:
-        projectile.move()
+        projectile.move(dt)
 
     game.master.update_health_bar(screen)
 

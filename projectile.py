@@ -30,8 +30,8 @@ class Projectile(pygame.sprite.Sprite):
     def remove(self):
         self.player.all_projectiles.remove(self)
 
-    def move(self):
-        self.time += 0.01  # Incrémentation du temps
+    def move(self,dt):
+        self.time += dt*8  # Incrémentation du temps
         self.rect.x = self.start_x + self.velocity * math.cos(self.angle) * self.time
         self.rect.y = self.start_y - (self.velocity * math.sin(self.angle) * self.time - (0.5 * self.gravity * self.time ** 2))
         self.rotate()
