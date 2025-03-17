@@ -3,6 +3,8 @@ import pygame
 from player import Player
 from master import Master
 
+clock = pygame.time.Clock()
+dt = clock.tick(60) / 1000.0
 class Game:
     def __init__(self):
         self.is_playing = False
@@ -28,7 +30,7 @@ class Game:
             self.master.update_health_bar(screen)
 
         for projectile in self.player.all_projectiles:
-            projectile.move()
+            projectile.move(dt)
 
         self.player.all_projectiles.draw(screen)
 
