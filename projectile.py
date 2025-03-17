@@ -38,6 +38,7 @@ class Projectile(pygame.sprite.Sprite):
         self.rect.y = self.start_y - (self.velocity * math.sin(self.angle) * self.time - (0.5 * self.gravity * self.time ** 2))
         #Ici, self.start correspond à la coordonnée à partir de laquelle notre projectile à été lancé (correspond à notre point d'origine)
         #Les formules sont retrouvables en appliquant la seconde loi de newton pour un corps en chute libre avec une potision initiale (C'est de là que provient self.start), et cela nous donne les équations pour les coordonnées x et y.
+        #En utilisant la seconde loi de Newton, on néglige déliberemment le frottement de l'air.
         self.rotate()
 
 
