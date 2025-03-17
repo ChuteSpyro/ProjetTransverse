@@ -1,3 +1,5 @@
+
+
 import pygame
 import math
 
@@ -32,14 +34,17 @@ class Projectile(pygame.sprite.Sprite):
 
     def move(self,dt):
         self.time += dt*8  # Incrémentation du temps
-        self.rect.x = self.start_x + self.velocity * math.cos(self.angle) * self.time
+        self.rect.x = self.start_x + self.velocity * math.cos(self.angle) * self.time #Ici, on calcule les cordonnées x et y du projectile et on associe l'image du projectile avec ces mêmes coordonnées.
         self.rect.y = self.start_y - (self.velocity * math.sin(self.angle) * self.time - (0.5 * self.gravity * self.time ** 2))
+        #Ici, self.start correspond à la coordonnée à partir de laquelle notre projectile à été lancé (correspond à notre point d'origine)
+        #Les formules sont retrouvables en appliquant la seconde loi de newton pour un corps en chute libre avec une potision initiale (C'est de là que provient self.start), et cela nous donne les équations pour les coordonnées x et y.
         self.rotate()
 
-        for master in self.player.game.check_collision(self, self.player.game.all_master):
+
+        for player in self.player.game.check_collision(self, self.player.game.all_player):
             self.remove()
 
-            master.damage(self.player.attack)
+            player.damage(self.player.attack)
 
         if self.rect.y > 1080:
             self.remove()
