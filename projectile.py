@@ -1,3 +1,5 @@
+
+
 import pygame
 import math
 
@@ -31,17 +33,18 @@ class Projectile(pygame.sprite.Sprite):
         self.player.all_projectiles.remove(self)
 
     def move(self):
+        self.rotate()
         self.time += 0.01  # Incrémentation du temps
         self.rect.x = self.start_x + self.velocity * math.cos(self.angle) * self.time
         self.rect.y = self.start_y - (self.velocity * math.sin(self.angle) * self.time - (0.5 * self.gravity * self.time ** 2))
-        self.rotate()
 
-        for master in self.player.game.check_collision(self, self.player.game.all_master):
+
+
+        for player in self.player.game.check_collision(self, self.player.game.all_player):
             self.remove()
 
-            master.damage(self.player.attack)
+            player.damage(self.player.attack)
 
         if self.rect.y > 1080:
             self.remove()
-
 
