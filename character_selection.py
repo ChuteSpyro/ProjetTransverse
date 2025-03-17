@@ -4,6 +4,8 @@ import sys
 # Initialisation de Pygame
 pygame.init()
 
+
+
 def select_character(screen):
     # Dimensions de la fenêtre
     WIDTH, HEIGHT = screen.get_size()

@@ -1,5 +1,6 @@
 import pygame
 from game import Game
+import math
 from character_selection import select_character
 
 
@@ -27,6 +28,10 @@ play_button_rect.y = (screen.get_height() - banner.get_height()) // 2 - 70
 game = Game()
 clock = pygame.time.Clock()
 
+# Variables pour le tir
+dragging = False  # Indique si on est en train de viser
+launch_pos = (0, 0)  # Position initiale du tir
+
 running = True
 while running:
 
@@ -41,22 +46,43 @@ while running:
 
         screen.blit(banner, (banner_rect.x, banner_rect.y))
 
+    if dragging:
+        origin_x, origin_y = game.player.rect.center  # Récupérer la position du joueur
+        pygame.draw.line(screen, (0, 0, 255), (origin_x, origin_y), pygame.mouse.get_pos(), 3)
     pygame.display.update()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
             pygame.quit()
-            print("fermeture du jeu mouahaha, looser !")
 
         elif event.type == pygame.KEYDOWN:
             game.pressed[event.key] = True
 
-
             if event.key == pygame.K_RETURN:
-                game.player.launch_projectile()
+                game.player.launch_projectile(45)  # Garder cette ligne si tu veux un autre mode de tir
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if play_button_rect.collidepoint(event.pos):
                 game.is_playing = True
+            else:
+                # Début du tir
+                dragging = True
+                launch_pos = event.pos  # Enregistre la position de départ
+
+        elif event.type == pygame.MOUSEBUTTONUP and dragging:
+            dragging = False
+            release_pos = event.pos
+
+            # Calculer la direction et la force du tir
+            dx = launch_pos[0] - release_pos[0]
+            dy = launch_pos[1] - release_pos[1]
+            power = 0.3  # Facteur d'amplification du tir
+
+            angle = math.atan2(-
+
+                               dy, dx)
+
+            # Appliquer la vitesse au projectile du joueur
+            game.player.launch_projectile(angle)
 

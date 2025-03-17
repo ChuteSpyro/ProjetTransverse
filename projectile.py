@@ -6,11 +6,11 @@ import math
 
 
 class Projectile(pygame.sprite.Sprite):
-    def __init__(self, player):
+    def __init__(self, player,angle):
         super().__init__()
         self.velocity = 90
         self.player = player
-        self.image = pygame.image.load('assets/projectile.png')
+        self.image = pygame.image.load('assets/dagger.png')
         self.image = pygame.transform.scale(self.image, (50, 50))
         self.rect = self.image.get_rect()
         self.rect.x = player.rect.x + 125
@@ -20,7 +20,7 @@ class Projectile(pygame.sprite.Sprite):
         self.origin_image = self.image
         self.time = 0.0
         self.rotate_angle = 0
-        self.angle = math.radians(45)
+        self.angle = angle
         self.gravity = 9.81
 
 
