@@ -3,7 +3,7 @@ from projectile import Projectile
 
 
 class Player(pygame.sprite.Sprite) :
-    def __init__(self,game):
+    def __init__(self, game):
         super().__init__()
         self.game = game
         self.health = 100
@@ -19,7 +19,9 @@ class Player(pygame.sprite.Sprite) :
         self.health -= damage
 
         if self.health <= 0 :
+            self.game.all_player.remove(self)
             self.kill()
+            self.game.master = None
 
     def launch_projectile(self):
         self.all_projectiles.add(Projectile(self))
@@ -28,8 +30,8 @@ class Player(pygame.sprite.Sprite) :
         bar_color = (111,210,46)
         back_bar_color = (60,63,60)
 
-        bar_position = [self.rect.x + 10 ,self.rect.y - 20,self.health,5]
-        back_bar_position = [self.rect.x + 10 ,self.rect.y - 20,self.max_health,5]
+        bar_position = [self.rect.x + 50 ,self.rect.y + 20,self.health,5]
+        back_bar_position = [self.rect.x + 50 ,self.rect.y + 20,self.max_health,5]
 
         pygame.draw.rect(surface, back_bar_color, back_bar_position)
         pygame.draw.rect(surface, bar_color, bar_position)

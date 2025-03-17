@@ -1,3 +1,5 @@
+
+
 import pygame
 import math
 
@@ -38,10 +40,11 @@ class Projectile(pygame.sprite.Sprite):
         #Les formules sont retrouvables en appliquant la seconde loi de newton pour un corps en chute libre avec une potision initiale (C'est de là que provient self.start), et cela nous donne les équations pour les coordonnées x et y.
         self.rotate()
 
-        for master in self.player.game.check_collision(self, self.player.game.all_master):
+
+        for player in self.player.game.check_collision(self, self.player.game.all_player):
             self.remove()
 
-            master.damage(self.player.attack)
+            player.damage(self.player.attack)
 
         if self.rect.y > 1080:
             self.remove()

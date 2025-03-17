@@ -1,5 +1,7 @@
 import pygame
 
+
+
 class Master(pygame.sprite.Sprite) :
     def __init__(self, game):
         super().__init__()
@@ -7,6 +9,7 @@ class Master(pygame.sprite.Sprite) :
         self.health = 100
         self.max_health = 100
         self.attack = 10
+        self.all_projectiles = pygame.sprite.Group()
         self.image = pygame.image.load('assets/mummy.png')
         self.rect = self.image.get_rect()
         self.rect.x = 900
@@ -16,7 +19,9 @@ class Master(pygame.sprite.Sprite) :
         self.health -= damage
 
         if self.health <= 0 :
+            self.game.all_master.remove(self)
             self.kill()
+            self.game.master = None
 
 
     def update_health_bar(self,surface):
