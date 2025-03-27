@@ -3,11 +3,13 @@ import sys
 
 # Initialisation de Pygame
 pygame.init()
+background = pygame.image.load("assets/bg.jpg")
 
 
 
 def select_character(screen):
     # Dimensions de la fenêtre
+    screen.blit(background, (0, -200))
     WIDTH, HEIGHT = screen.get_size()
     pygame.display.set_caption("Choose character and weapon")
 
@@ -70,7 +72,7 @@ def select_character(screen):
                         selected_weapon = weapons[selected_weapon_index]
                         running = False
 
-        screen.fill(WHITE)
+
 
         if not character_selected:
             character_rect = pygame.Rect(WIDTH // 2 - 75, HEIGHT // 2 - 75, 150, 150)
@@ -116,5 +118,3 @@ def select_character(screen):
             screen.blit(weapon_confirm_text, weapon_confirm_text_rect)
         pygame.display.flip()
 
-
-# Ici, vous pouvez poursuivre avec le reste de votre code de jeu en utilisant selected_character et selected_weapon.

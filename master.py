@@ -1,5 +1,5 @@
 import pygame
-
+from projectile import Projectile
 
 
 class Master(pygame.sprite.Sprite) :
@@ -22,6 +22,10 @@ class Master(pygame.sprite.Sprite) :
             self.game.all_master.remove(self)
             self.kill()
             self.game.master = None
+
+    def launch_master_projectile(self):
+        if self is not None:
+            self.all_projectiles.add(Projectile(self))
 
 
     def update_health_bar(self,surface):

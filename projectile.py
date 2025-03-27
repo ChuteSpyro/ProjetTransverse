@@ -6,15 +6,15 @@ import math
 
 
 class Projectile(pygame.sprite.Sprite):
-    def __init__(self, player,angle):
+    def __init__(self, user,angle):
         super().__init__()
         self.velocity = 90
-        self.player = player
+        self.user = user
         self.image = pygame.image.load('assets/dagger.png')
         self.image = pygame.transform.scale(self.image, (50, 50))
         self.rect = self.image.get_rect()
-        self.rect.x = player.rect.x + 125
-        self.rect.y = player.rect.y + 100
+        self.rect.x = user.rect.x + 125
+        self.rect.y = user.rect.y + 100
         self.start_x = self.rect.x
         self.start_y = self.rect.y
         self.origin_image = self.image
@@ -30,7 +30,7 @@ class Projectile(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=self.rect.center)
 
     def remove(self):
-        self.player.all_projectiles.remove(self)
+        self.user.all_projectiles.remove(self)
 
     def move(self,dt):
         self.time += dt*8  # Incrémentation du temps
@@ -42,10 +42,19 @@ class Projectile(pygame.sprite.Sprite):
         self.rotate()
 
 
-        for player in self.player.game.check_collision(self, self.player.game.all_player):
-            self.remove()
+        for user in self.user.game.check_collision(self, self.user.game.all_player):
+            if self.time > 0.4 :
 
-            player.damage(self.player.attack)
+
+                user.damage(self.user.attack)
+                self.remove()
+
+        for user in self.user.game.check_collision(self, self.user.game.all_master):
+            if self.time > 0.4 :
+
+
+                user.damage(self.user.attack)
+                self.remove()
 
         if self.rect.y > 1080:
             self.remove()
