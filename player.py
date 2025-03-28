@@ -23,8 +23,9 @@ class Player(pygame.sprite.Sprite) :
             self.kill()
             self.game.master = None
 
-    def launch_projectile(self,angle):
-        self.all_projectiles.add(Projectile(self,angle))
+    def launch_player_projectile(self,angle):
+        if self is not None:
+            self.all_projectiles.add(Projectile(self,angle))
 
     def update_health_bar(self,surface):
         bar_color = (111,210,46)
@@ -35,3 +36,4 @@ class Player(pygame.sprite.Sprite) :
 
         pygame.draw.rect(surface, back_bar_color, back_bar_position)
         pygame.draw.rect(surface, bar_color, bar_position)
+

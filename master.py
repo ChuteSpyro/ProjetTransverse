@@ -1,5 +1,5 @@
 import pygame
-
+from projectile import Projectile
 
 
 class Master(pygame.sprite.Sprite) :
@@ -23,6 +23,10 @@ class Master(pygame.sprite.Sprite) :
             self.kill()
             self.game.master = None
 
+    def launch_master_projectile(self,angle):
+        if self is not None:
+            self.all_projectiles.add(Projectile(self,angle))
+
 
     def update_health_bar(self,surface):
         bar_color = (111,210,46)
@@ -33,4 +37,5 @@ class Master(pygame.sprite.Sprite) :
 
         pygame.draw.rect(surface, back_bar_color, back_bar_position)
         pygame.draw.rect(surface, bar_color, bar_position)
+
 

@@ -23,7 +23,9 @@ play_button = pygame.image.load("assets/button.png")
 play_button = pygame.transform.scale(play_button, (400,150))
 play_button_rect = play_button.get_rect()
 play_button_rect.x = (screen.get_width() - play_button.get_width()) // 2 + 9
-play_button_rect.y = (screen.get_height() - banner.get_height()) // 2 - 70
+play_button_rect.y = (screen.get_height() - banner.get_height()) // 2 + 300
+
+
 
 game = Game()
 clock = pygame.time.Clock()
@@ -33,7 +35,9 @@ dragging = False  # Indique si on est en train de viser
 launch_pos = (0, 0)  # Position initiale du tir
 
 running = True
+playing = "player"
 while running:
+
 
     dt = clock.tick(60) / 1000.0
     screen.blit(background, (0, -200))
@@ -75,12 +79,25 @@ while running:
         if event.type == pygame.QUIT:
             running = False
             pygame.quit()
+            print("fermeture du jeu mouahaha, looser !")
 
         elif event.type == pygame.KEYDOWN:
             game.pressed[event.key] = True
 
             if event.key == pygame.K_RETURN:
-                game.player.launch_projectile(45)  # Garder cette ligne si tu veux un autre mode de tir
+                  # Garder cette ligne si tu veux un autre mode de tir
+                if playing == "player" and game.player is not None:
+                    game.player.launch_player_projectile(45)
+                    playing = "master"
+                    break
+
+                if playing == "master" and game.master is not None:
+                    game.master.launch_master_projectile(45)
+                    playing = "player"
+                    break
+
+
+
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if play_button_rect.collidepoint(event.pos):
@@ -102,5 +119,6 @@ while running:
             angle = math.atan2(-dy, dx)
 
             # Appliquer la vitesse au projectile du joueur
-            game.player.launch_projectile(angle)
+            game.player.launch_player_projectile(angle)
 
+                

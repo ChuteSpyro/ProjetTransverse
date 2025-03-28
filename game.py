@@ -29,10 +29,20 @@ class Game:
             screen.blit(self.master.image, self.master.rect)
             self.master.update_health_bar(screen)
 
-        for projectile in self.player.all_projectiles:
-            projectile.move(dt)
+        if self.player is not None:
+            for projectile in self.player.all_projectiles:
+                projectile.move(dt)
+            self.player.all_projectiles.draw(screen)
 
-        self.player.all_projectiles.draw(screen)
+        if self.master is not None:
+            for projectile in self.master.all_projectiles:
+                projectile.move(dt)
+            self.master.all_projectiles.draw(screen)
+
+
+
+
+
 
 
 
