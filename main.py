@@ -46,9 +46,29 @@ while running:
 
         screen.blit(banner, (banner_rect.x, banner_rect.y))
 
-    if dragging:
+    if game.is_playing and dragging:
         origin_x, origin_y = game.player.rect.center  # Récupérer la position du joueur
         pygame.draw.line(screen, (0, 0, 255), (origin_x, origin_y), pygame.mouse.get_pos(), 3)
+
+        # Affichage de la trajectoire en pointillés blancs
+        dx = launch_pos[0] - pygame.mouse.get_pos()[0]
+        dy = launch_pos[1] - pygame.mouse.get_pos()[1]
+        distance = math.hypot(dx, dy)
+        power_ratio = min(distance / 300, 1.0)
+        angle = math.atan2(-dy, dx)
+        speed = power_ratio * 90  # même vitesse que pour le projectile
+        start_x, start_y = game.player.rect.center
+        start_x += 50
+        start_y += 10
+        gravity = 9.81
+
+        for i in range(40):  # 40 points max
+            t = i * 0.1
+            x = start_x + speed * math.cos(angle) * t
+            y = start_y - (speed * math.sin(angle) * t - 0.5 * gravity * t**2)
+            if i % 2 == 0:
+                pygame.draw.circle(screen, (255, 255, 255), (int(x), int(y)), 3)
+
     pygame.display.update()
 
     for event in pygame.event.get():
@@ -79,9 +99,7 @@ while running:
             dy = launch_pos[1] - release_pos[1]
             power = 0.3  # Facteur d'amplification du tir
 
-            angle = math.atan2(-
-
-                               dy, dx)
+            angle = math.atan2(-dy, dx)
 
             # Appliquer la vitesse au projectile du joueur
             game.player.launch_projectile(angle)
