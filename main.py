@@ -99,6 +99,6 @@ while running:
             angle = math.atan2(-dy, dx)
 
             # Appliquer la vitesse au projectile du joueur
-            game.player.launch_projectile(angle)
+            game.player.launch_player_projectile(angle)
 
                 

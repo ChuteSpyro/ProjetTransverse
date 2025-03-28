@@ -23,7 +23,7 @@ class Player(pygame.sprite.Sprite) :
             self.kill()
             self.game.master = None
 
-    def launch_projectile(self,angle):
+    def launch_player_projectile(self,angle):
         if self is not None:
             self.all_projectiles.add(Projectile(self,angle))
 
