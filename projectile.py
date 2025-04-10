@@ -43,14 +43,14 @@ class Projectile(pygame.sprite.Sprite):
 
 
         for user in self.user.game.check_collision(self, self.user.game.all_player):
-            if self.time > 0.5 :
+            if self.time > 1 :
 
 
                 user.damage(self.user.attack)
                 self.remove()
 
         for user in self.user.game.check_collision(self, self.user.game.all_master):
-            if self.time > 0.5 :
+            if self.time > 1 :
 
 
                 user.damage(self.user.attack)

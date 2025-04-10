@@ -32,7 +32,6 @@ clock = pygame.time.Clock()
 
 # Variables pour le tir
 dragging = False  # Indique si on est en train de viser
-launch_pos = (0, 0)  # Position initiale du tir
 
 running = True
 playing = "player"
@@ -51,20 +50,39 @@ while running:
         screen.blit(banner, (banner_rect.x, banner_rect.y))
 
     if game.is_playing and dragging:
-        origin_x, origin_y = game.player.rect.center  # Récupérer la position du joueur
-        pygame.draw.line(screen, (0, 0, 255), (origin_x, origin_y), pygame.mouse.get_pos(), 3)
+        if playing == "player" and game.player is not None:
+            p_origin_x, p_origin_y = game.player.rect.center  # Récupérer la position du joueur
+            #pygame.draw.line(screen, (0, 0, 255), (p_origin_x, p_origin_y), pygame.mouse.get_pos(), 3)
 
-        # Affichage de la trajectoire en pointillés blancs
-        dx = launch_pos[0] - pygame.mouse.get_pos()[0]
-        dy = launch_pos[1] - pygame.mouse.get_pos()[1]
-        distance = math.hypot(dx, dy)
-        power_ratio = min(distance / 300, 1.0)
-        angle = math.atan2(-dy, dx)
-        speed = power_ratio * 90  # même vitesse que pour le projectile
-        start_x, start_y = game.player.rect.center
-        start_x += 50
-        start_y += 10
-        gravity = 9.81
+            # Affichage de la trajectoire en pointillés blancs
+            dx = p_origin_x - pygame.mouse.get_pos()[0]
+            dy = p_origin_y - pygame.mouse.get_pos()[1]
+            distance = math.hypot(dx, dy)
+            power_ratio = min(distance / 300, 1.0)
+            angle = math.atan2(-dy, dx)
+            speed = power_ratio * 90  # même vitesse que pour le projectile
+            start_x, start_y = game.player.rect.center
+            start_x += 50
+            start_y += 10
+            gravity = 9.81
+
+
+        if playing == "master" and game.master is not None:
+            m_origin_x, m_origin_y = game.master.rect.center  # Récupérer la position du master
+            #pygame.draw.line(screen, (0, 0, 255), (m_origin_x, m_origin_y), pygame.mouse.get_pos(), 3)
+
+            # Affichage de la trajectoire en pointillés blancs
+            dx = m_origin_x - pygame.mouse.get_pos()[0]
+            dy = m_origin_y - pygame.mouse.get_pos()[1]
+            distance = math.hypot(dx, dy)
+            power_ratio = min(distance / 300, 1.0)
+            angle = math.atan2(-dy, dx)
+            speed = power_ratio * 90  # même vitesse que pour le projectile
+            start_x, start_y = game.master.rect.center
+            start_x -= 50
+            start_y -= 10
+            gravity = 9.81
+
 
         for i in range(40):  # 40 points max
             t = i * 0.1
@@ -92,12 +110,9 @@ while running:
                     break
 
                 if playing == "master" and game.master is not None:
-                    game.master.launch_master_projectile(45)
+                    game.master.launch_master_projectile(-45)
                     playing = "player"
                     break
-
-
-
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if play_button_rect.collidepoint(event.pos):
@@ -111,14 +126,27 @@ while running:
             dragging = False
             release_pos = event.pos
 
-            # Calculer la direction et la force du tir
-            dx = launch_pos[0] - release_pos[0]
-            dy = launch_pos[1] - release_pos[1]
-            power = 0.3  # Facteur d'amplification du tir
+            if playing == "player" and game.player is not None:
+                p_origin_x, p_origin_y = game.player.rect.center
 
-            angle = math.atan2(-dy, dx)
+                # Calculer la direction et la force du tir
+                dx = p_origin_x - release_pos[0]
+                dy = p_origin_y - release_pos[1]
+                angle = math.atan2(-dy, dx)
 
-            # Appliquer la vitesse au projectile du joueur
-            game.player.launch_player_projectile(angle)
+                # Appliquer la vitesse au projectile du joueur
+                game.player.launch_player_projectile(angle)
+                playing = "master"  # Switch to master for the next round
 
+            elif playing == "master" and game.master is not None:
+                m_origin_x, m_origin_y = game.master.rect.center
+
+                # Calculer la direction et la force du tir
+                dx = m_origin_x - release_pos[0]
+                dy = m_origin_y - release_pos[1]
+                angle = math.atan2(-dy, dx)
+
+                # Appliquer la vitesse au projectile du master
+                game.master.launch_master_projectile(angle)
+                playing = "player"  # Switch to player for the next round
                 
