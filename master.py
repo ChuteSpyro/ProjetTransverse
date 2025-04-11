@@ -23,9 +23,9 @@ class Master(pygame.sprite.Sprite) :
             self.kill()
             self.game.master = None
 
-    def launch_master_projectile(self,angle):
+    def launch_master_projectile(self,angle,velocity=50):
         if self is not None:
-            self.all_projectiles.add(Projectile(self,angle))
+            self.all_projectiles.add(Projectile(self,angle,velocity))
 
 
     def update_health_bar(self,surface):

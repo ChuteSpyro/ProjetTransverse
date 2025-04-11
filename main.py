@@ -19,7 +19,7 @@ banner_rect = banner.get_rect()
 banner_rect.x = (screen.get_width() - banner.get_width()) // 2
 banner_rect.y = (screen.get_height() - banner.get_height()) // 2 - 70
 
-play_button = pygame.image.load("assets/button.png")
+play_button = pygame.image.load("assets/play_button.png")
 play_button = pygame.transform.scale(play_button, (400,150))
 play_button_rect = play_button.get_rect()
 play_button_rect.x = (screen.get_width() - play_button.get_width()) // 2 + 9
@@ -135,7 +135,10 @@ while running:
                 angle = math.atan2(-dy, dx)
 
                 # Appliquer la vitesse au projectile du joueur
-                game.player.launch_player_projectile(angle)
+                distance = math.hypot(dx, dy)
+                power_ratio = min(distance / 300, 1.0)
+                speed = power_ratio * 90
+                game.player.launch_player_projectile(angle, speed)
                 playing = "master"  # Switch to master for the next round
 
             elif playing == "master" and game.master is not None:
@@ -145,8 +148,10 @@ while running:
                 dx = m_origin_x - release_pos[0]
                 dy = m_origin_y - release_pos[1]
                 angle = math.atan2(-dy, dx)
-
-                # Appliquer la vitesse au projectile du master
-                game.master.launch_master_projectile(angle)
-                playing = "player"  # Switch to player for the next round
                 
+                # Appliquer la vitesse au projectile du master
+                distance = math.hypot(dx, dy)
+                power_ratio = min(distance / 300, 1.0)
+                speed = power_ratio * 90
+                game.master.launch_master_projectile(angle, speed)
+                playing = "player"  # Switch to player for the next round

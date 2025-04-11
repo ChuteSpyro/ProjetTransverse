@@ -6,9 +6,9 @@ import math
 
 
 class Projectile(pygame.sprite.Sprite):
-    def __init__(self, user,angle):
+    def __init__(self, user,angle,velocity):
         super().__init__()
-        self.velocity = 90
+        self.velocity = velocity*1.5
         self.user = user
         self.image = pygame.image.load('assets/dagger.png')
         self.image = pygame.transform.scale(self.image, (50, 50))
