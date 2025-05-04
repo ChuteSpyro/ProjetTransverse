@@ -1,5 +1,3 @@
-
-
 import pygame
 import math
 
@@ -12,9 +10,7 @@ class Projectile(pygame.sprite.Sprite):
         self.user = user
         self.image = pygame.image.load('assets/dagger.png')
         self.image = pygame.transform.scale(self.image, (50, 50))
-        self.rect = self.image.get_rect()
-        self.rect.x = user.rect.x + 125
-        self.rect.y = user.rect.y + 100
+        self.rect = self.image.get_rect(center=user.rect.center)
         self.start_x = self.rect.x
         self.start_y = self.rect.y
         self.origin_image = self.image
@@ -58,6 +54,3 @@ class Projectile(pygame.sprite.Sprite):
 
         if self.rect.y > 1080:
             self.remove()
-
-
-

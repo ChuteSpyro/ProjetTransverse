@@ -28,14 +28,16 @@ class Master(pygame.sprite.Sprite) :
             self.all_projectiles.add(Projectile(self,angle,velocity))
 
 
-    def update_health_bar(self,surface):
+    def update_health_bar(self, surface, camera):
         bar_color = (111,210,46)
         back_bar_color = (60,63,60)
 
-        bar_position = [self.rect.x + 10 ,self.rect.y - 20,self.health,5]
-        back_bar_position = [self.rect.x + 10 ,self.rect.y - 20,self.max_health,5]
+        bar_position = [self.rect.x + 10 - camera.offset.x,
+                        self.rect.y - 20 - camera.offset.y,
+                        self.health, 5]
+        back_bar_position = [self.rect.x + 10 - camera.offset.x,
+                             self.rect.y - 20 - camera.offset.y,
+                             self.max_health, 5]
 
         pygame.draw.rect(surface, back_bar_color, back_bar_position)
         pygame.draw.rect(surface, bar_color, bar_position)
-
-
