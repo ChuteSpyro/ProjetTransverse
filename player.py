@@ -14,6 +14,7 @@ class Player(pygame.sprite.Sprite) :
         self.rect = self.image.get_rect()
         self.rect.x = 10
         self.rect.y = 510
+        self.name = 'Player'
 
     def damage(self, damage):
         self.health -= damage
@@ -21,11 +22,11 @@ class Player(pygame.sprite.Sprite) :
         if self.health <= 0 :
             self.game.all_player.remove(self)
             self.kill()
-            self.game.master = None
+            self.game.player = None
 
     def launch_player_projectile(self,angle):
         if self is not None:
-            self.all_projectiles.add(Projectile(self,angle))
+            self.all_projectiles.add(Projectile(self,angle,self.name))
 
     def update_health_bar(self,surface):
         bar_color = (111,210,46)

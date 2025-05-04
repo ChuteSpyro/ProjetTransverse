@@ -6,15 +6,20 @@ import math
 
 
 class Projectile(pygame.sprite.Sprite):
-    def __init__(self, user,angle):
+    def __init__(self, user,angle,name):
         super().__init__()
         self.velocity = 90
         self.user = user
         self.image = pygame.image.load('assets/dagger.png')
         self.image = pygame.transform.scale(self.image, (50, 50))
         self.rect = self.image.get_rect()
-        self.rect.x = user.rect.x + 125
-        self.rect.y = user.rect.y + 100
+        if name == "Player":
+            self.rect.x = user.rect.x + 125
+            self.rect.y = user.rect.y + 100
+        if name == "Master":
+            self.rect.x = user.rect.x
+            self.rect.y = user.rect.y
+
         self.start_x = self.rect.x
         self.start_y = self.rect.y
         self.origin_image = self.image

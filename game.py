@@ -29,21 +29,15 @@ class Game:
             screen.blit(self.master.image, self.master.rect)
             self.master.update_health_bar(screen)
 
-        if self.player is not None:
+        if self.player is not None :
             for projectile in self.player.all_projectiles:
                 projectile.move(dt)
             self.player.all_projectiles.draw(screen)
 
-        if self.master is not None:
+        if self.master is not None :
             for projectile in self.master.all_projectiles:
                 projectile.move(dt)
             self.master.all_projectiles.draw(screen)
-
-
-
-
-
-
 
 
     def check_collision(self, sprite, group):

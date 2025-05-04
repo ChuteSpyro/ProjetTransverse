@@ -14,6 +14,7 @@ class Master(pygame.sprite.Sprite) :
         self.rect = self.image.get_rect()
         self.rect.x = 900
         self.rect.y = 550
+        self.name = 'Master'
 
     def damage(self, damage):
         self.health -= damage
@@ -25,7 +26,7 @@ class Master(pygame.sprite.Sprite) :
 
     def launch_master_projectile(self,angle):
         if self is not None:
-            self.all_projectiles.add(Projectile(self,angle))
+            self.all_projectiles.add(Projectile(self,angle,self.name))
 
 
     def update_health_bar(self,surface):
