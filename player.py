@@ -24,16 +24,20 @@ class Player(pygame.sprite.Sprite) :
             self.kill()
             self.game.player = None
 
-    def launch_player_projectile(self,angle):
+    def launch_player_projectile(self,angle,velocity=50):
         if self is not None:
-            self.all_projectiles.add(Projectile(self,angle,self.name))
+            self.all_projectiles.add(Projectile(self,angle,self.name,velocity))
 
-    def update_health_bar(self,surface):
+    def update_health_bar(self, surface, camera):
         bar_color = (111,210,46)
         back_bar_color = (60,63,60)
 
-        bar_position = [self.rect.x + 50 ,self.rect.y + 20,self.health,5]
-        back_bar_position = [self.rect.x + 50 ,self.rect.y + 20,self.max_health,5]
+        bar_position = [self.rect.x + 50 - camera.offset.x,
+                        self.rect.y + 20 - camera.offset.y,
+                        self.health, 5]
+        back_bar_position = [self.rect.x + 50 - camera.offset.x,
+                             self.rect.y + 20 - camera.offset.y,
+                             self.max_health, 5]
 
         pygame.draw.rect(surface, back_bar_color, back_bar_position)
         pygame.draw.rect(surface, bar_color, bar_position)

@@ -4,8 +4,9 @@ import sys
 # Initialisation de Pygame
 pygame.init()
 background = pygame.image.load("assets/bg.jpg")
-
-
+left_img = pygame.image.load("assets/left_button.png")
+right_img = pygame.image.load("assets/right_button.png")
+confirm_img = pygame.image.load("assets/confirm_button.png")
 
 def select_character(screen):
     # Dimensions de la fenêtre
@@ -29,13 +30,13 @@ def select_character(screen):
     selected_weapon_index = 0
 
     # Définition des zones (rectangles) pour les boutons
-    left_button = pygame.Rect(50, HEIGHT // 2 +15, 50, 50)
-    right_button = pygame.Rect(WIDTH - 100, HEIGHT // 2 +15, 50, 50)
-    confirm_button = pygame.Rect(WIDTH // 2 - 50, HEIGHT - 100, 100, 50)
+    left_button = left_img.get_rect(topleft=(50, HEIGHT // 2 + 15))
+    right_button = right_img.get_rect(topleft=(WIDTH - 100, HEIGHT // 2 + 15))
+    confirm_button = confirm_img.get_rect(center=(WIDTH // 2, HEIGHT - 75))
 
-    weapon_left_button = pygame.Rect(50, HEIGHT // 2 + 15, 50, 50)
-    weapon_right_button = pygame.Rect(WIDTH - 100, HEIGHT // 2 + 15, 50, 50)
-    weapon_confirm_button = pygame.Rect(WIDTH // 2 - 50, HEIGHT - 100, 100, 50)
+    weapon_left_button = left_img.get_rect(topleft=(50, HEIGHT // 2 + 15))
+    weapon_right_button = right_img.get_rect(topleft=(WIDTH - 100, HEIGHT // 2 + 15))
+    weapon_confirm_button = confirm_img.get_rect(center=(WIDTH // 2, HEIGHT - 75))
 
     # Police pour l'affichage du texte
     font = pygame.font.Font(None, 36)
@@ -72,8 +73,6 @@ def select_character(screen):
                         selected_weapon = weapons[selected_weapon_index]
                         running = False
 
-
-
         if not character_selected:
             character_rect = pygame.Rect(WIDTH // 2 - 75, HEIGHT // 2 - 75, 150, 150)
             pygame.draw.rect(screen, GRAY, character_rect)
@@ -81,20 +80,9 @@ def select_character(screen):
             text_rect = character_text.get_rect(center=character_rect.center)
             screen.blit(character_text, text_rect)
 
-            pygame.draw.rect(screen, BLUE, left_button)
-            left_text = font.render("<", True, WHITE)
-            left_text_rect = left_text.get_rect(center=left_button.center)
-            screen.blit(left_text, left_text_rect)
-
-            pygame.draw.rect(screen, BLUE, right_button)
-            right_text = font.render(">", True, WHITE)
-            right_text_rect = right_text.get_rect(center=right_button.center)
-            screen.blit(right_text, right_text_rect)
-
-            pygame.draw.rect(screen, GREEN, confirm_button)
-            confirm_text = font.render("Valider", True, WHITE)
-            confirm_text_rect = confirm_text.get_rect(center=confirm_button.center)
-            screen.blit(confirm_text, confirm_text_rect)
+            screen.blit(left_img, left_button.topleft)
+            screen.blit(right_img, right_button.topleft)
+            screen.blit(confirm_img, confirm_button.topleft)
         else:
             weapon_rect = pygame.Rect(WIDTH // 2 - 75, HEIGHT // 2 - 75, 150, 150)
             pygame.draw.rect(screen, GRAY, weapon_rect)
@@ -102,19 +90,7 @@ def select_character(screen):
             weapon_text_rect = weapon_text.get_rect(center=weapon_rect.center)
             screen.blit(weapon_text, weapon_text_rect)
 
-            pygame.draw.rect(screen, BLUE, weapon_left_button)
-            weapon_left_text = font.render("<", True, WHITE)
-            weapon_left_text_rect = weapon_left_text.get_rect(center=weapon_left_button.center)
-            screen.blit(weapon_left_text, weapon_left_text_rect)
-
-            pygame.draw.rect(screen, BLUE, weapon_right_button)
-            weapon_right_text = font.render(">", True, WHITE)
-            weapon_right_text_rect = weapon_right_text.get_rect(center=weapon_right_button.center)
-            screen.blit(weapon_right_text, weapon_right_text_rect)
-
-            pygame.draw.rect(screen, GREEN, weapon_confirm_button)
-            weapon_confirm_text = font.render("Valider", True, WHITE)
-            weapon_confirm_text_rect = weapon_confirm_text.get_rect(center=weapon_confirm_button.center)
-            screen.blit(weapon_confirm_text, weapon_confirm_text_rect)
+            screen.blit(left_img, weapon_left_button.topleft)
+            screen.blit(right_img, weapon_right_button.topleft)
+            screen.blit(confirm_img, weapon_confirm_button.topleft)
         pygame.display.flip()
-

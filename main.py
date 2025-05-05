@@ -2,12 +2,14 @@ import pygame
 from game import Game
 import math
 from character_selection import select_character
+from camera import Camera
 
 
 pygame.init()
 
 pygame.display.set_caption("Simple Game")
 screen = pygame.display.set_mode((1080,720))
+camera = Camera(*screen.get_size())
 
 background = pygame.image.load("assets/bg.jpg")
 
@@ -19,7 +21,7 @@ banner_rect = banner.get_rect()
 banner_rect.x = (screen.get_width() - banner.get_width()) // 2
 banner_rect.y = (screen.get_height() - banner.get_height()) // 2 - 70
 
-play_button = pygame.image.load("assets/button.png")
+play_button = pygame.image.load("assets/play_button.png")
 play_button = pygame.transform.scale(play_button, (400,150))
 play_button_rect = play_button.get_rect()
 play_button_rect.x = (screen.get_width() - play_button.get_width()) // 2 + 9
@@ -32,6 +34,9 @@ clock = pygame.time.Clock()
 
 # Variables pour le tir
 dragging = False  # Indique si on est en train de viser
+follow_projectile = False
+follow_timer = 0.0
+follow_target = None
 
 running = True
 playing = "player"
@@ -39,57 +44,78 @@ while running:
 
 
     dt = clock.tick(60) / 1000.0
-    screen.blit(background, (0, -200))
-
-    if game.is_playing :
-        game.update(screen)
-
-    else :
-        screen.blit(play_button, (play_button_rect.x, play_button_rect.y))
-
-        screen.blit(banner, (banner_rect.x, banner_rect.y))
-
-    if game.is_playing and dragging:
+    # Update camera to follow the current active character or projectile
+    if follow_projectile and follow_target is not None:
+        follow_timer += dt
+        camera.smooth_update(follow_target, dt*3)
+        if follow_timer >= 2.0:
+            follow_projectile = False
+    else:
         if playing == "player" and game.player is not None:
-            p_origin_x, p_origin_y = game.player.rect.center  # Récupérer la position du joueur
-            #pygame.draw.line(screen, (0, 0, 255), (p_origin_x, p_origin_y), pygame.mouse.get_pos(), 3)
+            camera.smooth_update(game.player, dt)
+        elif playing == "master" and game.master is not None:
+            camera.smooth_update(game.master, dt)
 
-            # Affichage de la trajectoire en pointillés blancs
-            dx = p_origin_x - pygame.mouse.get_pos()[0]
-            dy = p_origin_y - pygame.mouse.get_pos()[1]
-            distance = math.hypot(dx, dy)
-            power_ratio = min(distance / 300, 1.0)
-            angle = math.atan2(-dy, dx)
-            speed = power_ratio * 90  # même vitesse que pour le projectile
-            start_x, start_y = game.player.rect.center
-            start_x += 50
-            start_y += 10
+    if game.is_playing:
+        # Create a viewport surface to draw everything non-zoomed
+        viewport = pygame.Surface(screen.get_size())
+        viewport.fill((0, 0, 0))
+
+        # Draw background at camera offset
+        bg_rect = background.get_rect()
+        bg_rect.topleft = -camera.offset
+        viewport.blit(background, bg_rect)
+
+        # Draw game objects into viewport
+        game.update(viewport, camera)
+
+            # Trajectory debug draw if dragging
+        if dragging:
+            # Calculate launch parameters based on current mouse position
+            if playing == "player" and game.player is not None:
+                origin_x, origin_y = game.player.rect.midright
+                dx = origin_x - pygame.mouse.get_pos()[0]
+                dy = origin_y - pygame.mouse.get_pos()[1]
+                distance = math.hypot(dx, dy)
+                power_ratio = min(distance / 300, 1.0)
+                angle = math.atan2(-dy, dx)
+                speed = power_ratio * 90
+                start_x, start_y = origin_x, origin_y
+            elif playing == "master" and game.master is not None:
+                origin_x, origin_y = game.master.rect.midleft
+                dx = origin_x - pygame.mouse.get_pos()[0]
+                dy = origin_y - pygame.mouse.get_pos()[1]
+                distance = math.hypot(dx, dy)
+                power_ratio = min(distance / 300, 1.0)
+                angle = math.atan2(-dy, dx)
+                speed = power_ratio * 90
+                start_x, start_y = origin_x, origin_y
             gravity = 9.81
 
+            # Draw trajectory
+            for i in range(40):
+                t = i * 0.1
+                x = start_x + speed * math.cos(angle) * t
+                y = start_y - (speed * math.sin(angle) * t - 0.5 * gravity * t**2)
+                if i % 2 == 0:
+                    pos = (int(x - camera.offset.x), int(y - camera.offset.y))
+                    pygame.draw.circle(viewport, (255, 255, 255), pos, 3)
 
-        if playing == "master" and game.master is not None:
-            m_origin_x, m_origin_y = game.master.rect.center  # Récupérer la position du master
-            #pygame.draw.line(screen, (0, 0, 255), (m_origin_x, m_origin_y), pygame.mouse.get_pos(), 3)
-
-            # Affichage de la trajectoire en pointillés blancs
-            dx = m_origin_x - pygame.mouse.get_pos()[0]
-            dy = m_origin_y - pygame.mouse.get_pos()[1]
-            distance = math.hypot(dx, dy)
-            power_ratio = min(distance / 300, 1.0)
-            angle = math.atan2(-dy, dx)
-            speed = power_ratio * 90  # même vitesse que pour le projectile
-            start_x, start_y = game.master.rect.center
-            start_x -= 50
-            start_y -= 10
-            gravity = 9.81
-
-
-        for i in range(40):  # 40 points max
-            t = i * 0.1
-            x = start_x + speed * math.cos(angle) * t
-            y = start_y - (speed * math.sin(angle) * t - 0.5 * gravity * t**2)
-            if i % 2 == 0:
-                pygame.draw.circle(screen, (255, 255, 255), (int(x), int(y)), 3)
+        # Zoom the viewport
+        zoom = 1.5
+        sw, sh = screen.get_size()
+        scaled = pygame.transform.scale(viewport, (int(sw * zoom), int(sh * zoom)))
+        screen.fill((0, 0, 0))
+        screen.blit(
+            scaled,
+            (-(scaled.get_width()  - sw)//2,
+             -(scaled.get_height() - sh)//2)
+        )
+    else:
+        # Main menu without zoom
+        screen.fill((0, 0, 0))
+        screen.blit(play_button, play_button_rect)
+        screen.blit(banner,      banner_rect)
 
     pygame.display.update()
 
@@ -130,23 +156,46 @@ while running:
                 p_origin_x, p_origin_y = game.player.rect.center
 
                 # Calculer la direction et la force du tir
-                dx = p_origin_x - release_pos[0]
-                dy = p_origin_y - release_pos[1]
+                world_x = release_pos[0] + camera.offset.x
+                world_y = release_pos[1] + camera.offset.y
+                dx = p_origin_x - world_x
+                dy = p_origin_y - world_y
                 angle = math.atan2(-dy, dx)
 
                 # Appliquer la vitesse au projectile du joueur
-                game.player.launch_player_projectile(angle)
+                distance = math.hypot(dx, dy)
+                power_ratio = min(distance / 300, 1.0)
+                speed = power_ratio * 90
+                game.player.launch_player_projectile(angle, speed)
                 playing = "master"  # Switch to master for the next round
+                if playing == "master":
+                    proj = game.player.all_projectiles.sprites()[-1]
+                else:
+                    proj = game.master.all_projectiles.sprites()[-1]
+                follow_target = proj
+                follow_projectile = True
+                follow_timer = 0.0
 
             elif playing == "master" and game.master is not None:
                 m_origin_x, m_origin_y = game.master.rect.center
 
                 # Calculer la direction et la force du tir
-                dx = m_origin_x - release_pos[0]
-                dy = m_origin_y - release_pos[1]
+                world_x = release_pos[0] + camera.offset.x
+                world_y = release_pos[1] + camera.offset.y
+                dx = m_origin_x - world_x
+                dy = m_origin_y - world_y
                 angle = math.atan2(-dy, dx)
 
                 # Appliquer la vitesse au projectile du master
-                game.master.launch_master_projectile(angle)
+                distance = math.hypot(dx, dy)
+                power_ratio = min(distance / 300, 1.0)
+                speed = power_ratio * 90
+                game.master.launch_master_projectile(angle, speed)
                 playing = "player"  # Switch to player for the next round
-                
+                if playing == "master":
+                    proj = game.player.all_projectiles.sprites()[-1]
+                else:
+                    proj = game.master.all_projectiles.sprites()[-1]
+                follow_target = proj
+                follow_projectile = True
+                follow_timer = 0.0

@@ -20,26 +20,29 @@ class Game:
         self.pressed = {}
 
 
-    def update(self,screen):
+    def update(self, screen, camera):
         if self.player is not None:
-            screen.blit(self.player.image, self.player.rect)
-            self.player.update_health_bar(screen)
+            rect = camera.apply(self.player.rect)
+            screen.blit(self.player.image, rect)
+            self.player.update_health_bar(screen, camera)
 
         if self.master is not None:
-            screen.blit(self.master.image, self.master.rect)
-            self.master.update_health_bar(screen)
+            rect = camera.apply(self.master.rect)
+            screen.blit(self.master.image, rect)
+            self.master.update_health_bar(screen, camera)
 
         if self.player is not None :
             for projectile in self.player.all_projectiles:
                 projectile.move(dt)
-            self.player.all_projectiles.draw(screen)
+            for projectile in self.player.all_projectiles:
+                screen.blit(projectile.image, camera.apply(projectile.rect))
 
         if self.master is not None :
             for projectile in self.master.all_projectiles:
                 projectile.move(dt)
-            self.master.all_projectiles.draw(screen)
+            for projectile in self.master.all_projectiles:
+                screen.blit(projectile.image, camera.apply(projectile.rect))
 
 
     def check_collision(self, sprite, group):
         return pygame.sprite.spritecollide(sprite, group, False, pygame.sprite.collide_mask)
-
