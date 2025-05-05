@@ -1,6 +1,6 @@
-
 import pygame
 from game import Game
+from map import *
 import math
 from character_selection import select_character
 from camera import Camera
@@ -9,10 +9,22 @@ from camera import Camera
 pygame.init()
 
 pygame.display.set_caption("Simple Game")
+
+#MAP
+WIDTH, HEIGHT = 3000, 720
+TILE_SIZE = 100
+
+
+SKY = (135, 206, 235)
+
+# Génération du sol
+
+background = generate_soft_terrain(WIDTH, HEIGHT, TILE_SIZE)
+
+
 screen = pygame.display.set_mode((1080,720))
 camera = Camera(*screen.get_size())
 
-background = pygame.image.load("assets/bg.jpg")
 
 selected_character = select_character(screen)
 
@@ -60,7 +72,7 @@ while running:
     if game.is_playing:
         # Create a viewport surface to draw everything non-zoomed
         viewport = pygame.Surface(screen.get_size())
-        viewport.fill((0, 0, 0))
+        viewport.fill((180, 230, 255))
 
         # Draw background at camera offset
         bg_rect = background.get_rect()
@@ -71,33 +83,32 @@ while running:
         game.update(viewport, camera)
 
             # Trajectory debug draw if dragging
+        # Trajectory preview
         if dragging:
-            # Calculate launch parameters based on current mouse position
             if playing == "player" and game.player is not None:
-                origin_x, origin_y = game.player.rect.midright
-                dx = origin_x - pygame.mouse.get_pos()[0]
-                dy = origin_y - pygame.mouse.get_pos()[1]
-                distance = math.hypot(dx, dy)
-                power_ratio = min(distance / 300, 1.0)
-                angle = math.atan2(-dy, dx)
-                speed = power_ratio * 90
-                start_x, start_y = origin_x, origin_y
+                origin_x, origin_y = game.player.rect.center
             elif playing == "master" and game.master is not None:
-                origin_x, origin_y = game.master.rect.midleft
-                dx = origin_x - pygame.mouse.get_pos()[0]
-                dy = origin_y - pygame.mouse.get_pos()[1]
-                distance = math.hypot(dx, dy)
-                power_ratio = min(distance / 300, 1.0)
-                angle = math.atan2(-dy, dx)
-                speed = power_ratio * 90
-                start_x, start_y = origin_x, origin_y
+                origin_x, origin_y = game.master.rect.center
+            else:
+                origin_x, origin_y = 0, 0  # fallback
+
+            # Convert mouse pos to world coordinates
+            mouse_x = pygame.mouse.get_pos()[0] + camera.offset.x
+            mouse_y = pygame.mouse.get_pos()[1] + camera.offset.y
+
+            dx = origin_x - mouse_x
+            dy = origin_y - mouse_y
+            distance = math.hypot(dx, dy)
+            power_ratio = min(distance / 300, 1.0)
+            angle = math.atan2(-dy, dx)
+            speed = power_ratio * 90
             gravity = 9.81
 
-            # Draw trajectory
-            for i in range(40):
+            # Draw
+            for i in range(60):
                 t = i * 0.1
-                x = start_x + speed * math.cos(angle) * t
-                y = start_y - (speed * math.sin(angle) * t - 0.5 * gravity * t**2)
+                x = origin_x + speed * math.cos(angle) * t
+                y = origin_y - (speed * math.sin(angle) * t - 0.5 * gravity * t ** 2)
                 if i % 2 == 0:
                     pos = (int(x - camera.offset.x), int(y - camera.offset.y))
                     pygame.draw.circle(viewport, (255, 255, 255), pos, 3)

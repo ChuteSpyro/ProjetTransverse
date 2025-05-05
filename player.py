@@ -9,12 +9,13 @@ class Player(pygame.sprite.Sprite) :
         self.game = game
         self.health = 100
         self.max_health = 100
-        self.attack = 100
+        self.attack = 10
         self.all_projectiles = pygame.sprite.Group()
         self.image = pygame.image.load('assets/player.png')
+        self.image.set_colorkey((255, 255, 255))
         self.rect = self.image.get_rect()
-        self.rect.x = 10
-        self.rect.y = 510
+        self.rect.x = 1000
+        self.rect.y = 200
 
     def damage(self, damage):
         self.health -= damage

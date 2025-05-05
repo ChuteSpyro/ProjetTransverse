@@ -43,13 +43,5 @@ class Game:
             for projectile in self.master.all_projectiles:
                 projectile.move(dt)
 
-
-
-
-
-
-
-
-
     def check_collision(self, sprite, group):
         return pygame.sprite.spritecollide(sprite, group, False, pygame.sprite.collide_mask)
