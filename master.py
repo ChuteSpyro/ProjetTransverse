@@ -1,3 +1,4 @@
+
 import pygame
 from projectile import Projectile
 
@@ -8,7 +9,7 @@ class Master(pygame.sprite.Sprite) :
         self.game = game
         self.health = 100
         self.max_health = 100
-        self.attack = 10
+        self.attack = 100
         self.all_projectiles = pygame.sprite.Group()
         self.image = pygame.image.load('assets/mummy.png')
         self.rect = self.image.get_rect()
@@ -25,7 +26,7 @@ class Master(pygame.sprite.Sprite) :
 
     def launch_master_projectile(self,angle,velocity=50):
         if self is not None:
-            self.all_projectiles.add(Projectile(self,angle,self.name,velocity))
+            self.all_projectiles.add(Projectile(self,angle,velocity))
 
 
     def update_health_bar(self, surface, camera):
@@ -41,5 +42,3 @@ class Master(pygame.sprite.Sprite) :
 
         pygame.draw.rect(surface, back_bar_color, back_bar_position)
         pygame.draw.rect(surface, bar_color, bar_position)
-
-

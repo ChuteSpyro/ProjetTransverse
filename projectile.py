@@ -1,25 +1,17 @@
 
-
 import pygame
 import math
 
 
 
 class Projectile(pygame.sprite.Sprite):
-    def __init__(self, user,angle,name):
+    def __init__(self, user,angle,velocity):
         super().__init__()
-        self.velocity = 90
+        self.velocity = velocity*1.5
         self.user = user
         self.image = pygame.image.load('assets/dagger.png')
         self.image = pygame.transform.scale(self.image, (50, 50))
-        self.rect = self.image.get_rect()
-        if name == "Player":
-            self.rect.x = user.rect.x + 125
-            self.rect.y = user.rect.y + 100
-        if name == "Master":
-            self.rect.x = user.rect.x
-            self.rect.y = user.rect.y
-
+        self.rect = self.image.get_rect(center=user.rect.center)
         self.start_x = self.rect.x
         self.start_y = self.rect.y
         self.origin_image = self.image
@@ -49,20 +41,13 @@ class Projectile(pygame.sprite.Sprite):
 
         for user in self.user.game.check_collision(self, self.user.game.all_player):
             if self.time > 1 :
-
-
                 user.damage(self.user.attack)
                 self.remove()
 
         for user in self.user.game.check_collision(self, self.user.game.all_master):
             if self.time > 1 :
-
-
                 user.damage(self.user.attack)
                 self.remove()
 
         if self.rect.y > 1080:
             self.remove()
-
-
-

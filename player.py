@@ -1,3 +1,4 @@
+
 import pygame
 from projectile import Projectile
 
@@ -8,13 +9,12 @@ class Player(pygame.sprite.Sprite) :
         self.game = game
         self.health = 100
         self.max_health = 100
-        self.attack = 10
+        self.attack = 100
         self.all_projectiles = pygame.sprite.Group()
         self.image = pygame.image.load('assets/player.png')
         self.rect = self.image.get_rect()
         self.rect.x = 10
         self.rect.y = 510
-        self.name = 'Player'
 
     def damage(self, damage):
         self.health -= damage
@@ -26,7 +26,7 @@ class Player(pygame.sprite.Sprite) :
 
     def launch_player_projectile(self,angle,velocity=50):
         if self is not None:
-            self.all_projectiles.add(Projectile(self,angle,self.name,velocity))
+            self.all_projectiles.add(Projectile(self,angle,velocity))
 
     def update_health_bar(self, surface, camera):
         bar_color = (111,210,46)
@@ -41,4 +41,3 @@ class Player(pygame.sprite.Sprite) :
 
         pygame.draw.rect(surface, back_bar_color, back_bar_position)
         pygame.draw.rect(surface, bar_color, bar_position)
-
