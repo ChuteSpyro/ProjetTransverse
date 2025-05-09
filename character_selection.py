@@ -101,15 +101,13 @@ def character_and_weapon_select(screen):
                         p2_ready = True
 
         # affichage J1
-        text1 = font.render("Perso J1", True, (255, 255, 255))
-        screen.blit(text1, (x1, y_char))
-        screen.blit(pygame.transform.scale(character_images[characters[p1_char]], (200, 200)), (x1 + 100, y_char + 40))
+        text1 = font.render("Player 1", True, (255, 255, 255))
+        screen.blit(text1, (x1 + 100, y_char - 60))
+        screen.blit(pygame.transform.scale(character_images[characters[p1_char]], (200, 200)), (x1 + 50, y_char))
         screen.blit(left_img, left1_char.topleft)
         screen.blit(right_img, right1_char.topleft)
 
-        text1 = font.render("Arme J1", True, (255, 255, 255))
-        screen.blit(text1, (x1, y_weapon))
-        screen.blit(pygame.transform.scale(weapon_images[weapons[p1_weapon]], (200, 200)), (x1 + 100, y_weapon + 40))
+        screen.blit(pygame.transform.scale(weapon_images[weapons[p1_weapon]], (200, 200)), (x1 + 50, y_weapon + 10))
         screen.blit(left_img, left1_weapon.topleft)
         screen.blit(right_img, right1_weapon.topleft)
         screen.blit(confirm_img, confirm1.topleft)
@@ -119,15 +117,14 @@ def character_and_weapon_select(screen):
             screen.blit(ready_text, (x1 + 120, y_weapon + 280))
 
         # affichage J2
-        text2 = font.render("Perso J2", True, (255, 255, 255))
-        screen.blit(text2, (x2, y_char))
-        screen.blit(pygame.transform.scale(character_images[characters[p2_char]], (200, 200)), (x2 + 100, y_char + 40))
+        text2 = font.render("Player 2", True, (255, 255, 255))
+        screen.blit(text2, (x2 + 100, y_char - 60))
+        screen.blit(pygame.transform.scale(character_images[characters[p2_char]], (200, 200)), (x2 + 50, y_char  ))
         screen.blit(left_img, left2_char.topleft)
         screen.blit(right_img, right2_char.topleft)
 
-        text2 = font.render("Arme J2", True, (255, 255, 255))
-        screen.blit(text2, (x2, y_weapon))
-        screen.blit(pygame.transform.scale(weapon_images[weapons[p2_weapon]], (200, 200)), (x2 + 100, y_weapon + 40))
+
+        screen.blit(pygame.transform.scale(weapon_images[weapons[p2_weapon]], (200, 200)), (x2 + 50, y_weapon + 10))
         screen.blit(left_img, left2_weapon.topleft)
         screen.blit(right_img, right2_weapon.topleft)
         screen.blit(confirm_img, confirm2.topleft)

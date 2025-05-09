@@ -45,8 +45,21 @@ game = Game()
 game.terrain_mask = terrain_mask
 clock = pygame.time.Clock()
 
-# Variables de gameplay
-dragging = False
+def place_on_ground(sprite):
+    # on prend le centre horizontal du sprite
+    x_center = sprite.rect.x + sprite.rect.width // 2
+    # on scanne du haut (y=0) jusqu'en bas (y=HEIGHT)
+    for y in range(HEIGHT):
+        if terrain_mask.get_at((x_center, y)):
+            # on met sur le sol:
+            sprite.rect.bottom = y
+            break
+
+place_on_ground(game.player)
+place_on_ground(game.master)
+
+# Variables pour le tir
+dragging = False  # Indique si on est en train de viser
 follow_projectile = False
 follow_timer = 0.0
 follow_target = None
@@ -128,13 +141,17 @@ while running:
                     pos = (int(x - camera.offset.x), int(y - camera.offset.y))
                     pygame.draw.circle(viewport, (255, 255, 255), pos, 3)
 
-        # Zoom dynamique
-        if intro:
+        # Zoom transition only after gameplay begins
+        if not game.is_playing:
             zoom = start_zoom
         else:
-            zoom_current += (end_zoom - zoom_current) * dt * zoom_smooth_speed
-            zoom = zoom_current
-
+            # First, hold start_zoom for intro duration
+            if intro:
+                zoom = start_zoom
+            else:
+                # interpolate zoom_current toward end_zoom
+                zoom_current += (end_zoom - zoom_current) * dt * zoom_smooth_speed
+                zoom = zoom_current
         sw, sh = screen.get_size()
         scaled = pygame.transform.scale(viewport, (int(sw * zoom), int(sh * zoom)))
         screen.fill((0, 0, 0))
@@ -194,11 +211,15 @@ while running:
             # Maître
             elif playing == "master" and game.master:
                 m_origin_x, m_origin_y = game.master.rect.center
+
+                # Calculer la direction et la force du tir
                 world_x = release_pos[0] + camera.offset.x
                 world_y = release_pos[1] + camera.offset.y
                 dx = m_origin_x - world_x
                 dy = m_origin_y - world_y
                 angle = math.atan2(-dy, dx)
+
+                # Appliquer la vitesse au projectile du master
                 distance = math.hypot(dx, dy)
                 power_ratio = min(distance / 300, 1.0)
                 speed = power_ratio * 90
