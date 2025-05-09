@@ -51,6 +51,13 @@ dragging = False  # Indique si on est en train de viser
 follow_projectile = False
 follow_timer = 0.0
 follow_target = None
+intro = True
+intro_timer = 0.0
+intro_duration = 3.0  # seconds of wide shot at game start
+start_zoom = 1.0
+end_zoom = 1.5
+zoom_current = start_zoom
+zoom_smooth_speed = 2.0
 
 running = True
 playing = "player"
@@ -58,17 +65,30 @@ while running:
 
 
     dt = clock.tick(60) / 1000.0
-    # Update camera to follow the current active character or projectile
-    if follow_projectile and follow_target is not None:
-        follow_timer += dt
-        camera.smooth_update(follow_target, dt*3)
-        if follow_timer >= 2.0:
-            follow_projectile = False
-    else:
-        if playing == "player" and game.player is not None:
-            camera.smooth_update(game.player, dt)
-        elif playing == "master" and game.master is not None:
-            camera.smooth_update(game.master, dt)
+    # Camera logic runs only when the game has started
+    if game.is_playing:
+        # Intro wide shot before gameplay zoom and follow
+        if intro:
+            intro_timer += dt
+            if game.player is not None and game.master is not None:
+                mid_x = (game.player.rect.centerx + game.master.rect.centerx) / 2
+                mid_y = (game.player.rect.centery + game.master.rect.centery) / 2
+                camera.offset.x = mid_x - screen.get_width() / 2
+                camera.offset.y = mid_y - screen.get_height() / 2
+            if intro_timer >= intro_duration:
+                intro = False
+        # Follow projectile immediately after firing
+        elif follow_projectile and follow_target is not None:
+            follow_timer += dt
+            camera.smooth_update(follow_target, dt)
+            if follow_timer >= 2.0:
+                follow_projectile = False
+        # Regular smooth follow of active character after intro
+        else:
+            if playing == "player" and game.player is not None:
+                camera.smooth_update(game.player, dt)
+            elif playing == "master" and game.master is not None:
+                camera.smooth_update(game.master, dt)
 
     if game.is_playing:
         # Create a viewport surface to draw everything non-zoomed
@@ -114,8 +134,17 @@ while running:
                     pos = (int(x - camera.offset.x), int(y - camera.offset.y))
                     pygame.draw.circle(viewport, (255, 255, 255), pos, 3)
 
-        # Zoom the viewport
-        zoom = 1.5
+        # Zoom transition only after gameplay begins
+        if not game.is_playing:
+            zoom = start_zoom
+        else:
+            # First, hold start_zoom for intro duration
+            if intro:
+                zoom = start_zoom
+            else:
+                # interpolate zoom_current toward end_zoom
+                zoom_current += (end_zoom - zoom_current) * dt * zoom_smooth_speed
+                zoom = zoom_current
         sw, sh = screen.get_size()
         scaled = pygame.transform.scale(viewport, (int(sw * zoom), int(sh * zoom)))
         screen.fill((0, 0, 0))
