@@ -2,7 +2,7 @@ import pygame
 from game import Game
 from map import *
 import math
-from character_selection import select_character
+from character_selection import select_character, background
 from camera import Camera
 
 
@@ -11,7 +11,7 @@ pygame.init()
 pygame.display.set_caption("Simple Game")
 
 #MAP
-WIDTH, HEIGHT = 3000, 720
+WIDTH, HEIGHT = 4000, 720
 TILE_SIZE = 100
 
 
@@ -19,14 +19,14 @@ SKY = (135, 206, 235)
 
 # Génération du sol
 
-background = generate_soft_terrain(WIDTH, HEIGHT, TILE_SIZE)
+background, terrain_mask = generate_map(WIDTH, HEIGHT, TILE_SIZE)
 
 
 screen = pygame.display.set_mode((1080,720))
 camera = Camera(*screen.get_size())
 
 
-selected_character = select_character(screen)
+#selected_character = select_character(screen)
 
 banner = pygame.image.load("assets/banner.png")
 banner = pygame.transform.scale(banner, (500,500))
@@ -43,6 +43,7 @@ play_button_rect.y = (screen.get_height() - banner.get_height()) // 2 + 300
 
 
 game = Game()
+game.terrain_mask = terrain_mask
 clock = pygame.time.Clock()
 
 # Variables pour le tir
