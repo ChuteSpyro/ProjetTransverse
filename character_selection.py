@@ -4,7 +4,7 @@ import sys
 # Initialisation de pygame
 pygame.init()
 info = pygame.display.Info()
-WIDTH, HEIGHT = 800, 600  # Définition d'une taille de fenêtre plus petite
+WIDTH, HEIGHT = 1080, 720  # Définition d'une taille de fenêtre plus petite
 screen = pygame.display.set_mode((WIDTH, HEIGHT))  # Suppression de pygame.FULLSCREEN
 pygame.display.set_caption("Sélection des personnages et armes")
 
