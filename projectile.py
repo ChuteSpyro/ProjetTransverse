@@ -19,6 +19,8 @@ class Projectile(pygame.sprite.Sprite):
         self.rotate_angle = 0
         self.angle = angle
         self.gravity = 9.81
+        self.grass_sound = pygame.mixer.Sound("assets/sounds/sword_in_ground.mp3")
+        self.pain_sound = pygame.mixer.Sound("assets/sounds/caracter_hurt.mp3")
 
 
     def rotate(self):
@@ -40,12 +42,14 @@ class Projectile(pygame.sprite.Sprite):
 
         for user in self.user.game.check_collision(self, self.user.game.all_player):
             if self.time > 3 :
+                self.pain_sound.play()
                 user.damage(self.user.attack)
                 self.remove()
                 return
 
         for user in self.user.game.check_collision(self, self.user.game.all_master):
             if self.time > 3 :
+                self.pain_sound.play()
                 user.damage(self.user.attack)
                 self.remove()
                 return
@@ -55,10 +59,10 @@ class Projectile(pygame.sprite.Sprite):
             offset = (int(self.rect.x), int(self.rect.y))
             projectile_mask = pygame.mask.from_surface(self.image)
             if terrain_mask.overlap(projectile_mask, offset):
+                self.grass_sound.play()
                 self.user.all_projectiles.remove(self)
                 self.user.game.stuck_projectiles.add(self)
-                pygame.mixer.music.load("assets/sounds/Musique_de_fond.mp3")
-                pygame.mixer.music.play(-1)  # -1 = boucle infinie
+
                 return
 
         if self.rect.y > 1080:

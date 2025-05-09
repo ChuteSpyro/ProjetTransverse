@@ -65,6 +65,8 @@ while running:
 
     dt = clock.tick(60) / 1000.0
 
+    if game.is_playing :
+        pygame.mixer.music.stop()
 
     # Logique de caméra si le jeu est actif
     if game.is_playing:
