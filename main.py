@@ -47,6 +47,19 @@ game = Game()
 game.terrain_mask = terrain_mask
 clock = pygame.time.Clock()
 
+def place_on_ground(sprite):
+    # on prend le centre horizontal du sprite
+    x_center = sprite.rect.x + sprite.rect.width // 2
+    # on scanne du haut (y=0) jusqu'en bas (y=HEIGHT)
+    for y in range(HEIGHT):
+        if terrain_mask.get_at((x_center, y)):
+            # on met sur le sol:
+            sprite.rect.bottom = y
+            break
+
+place_on_ground(game.player)
+place_on_ground(game.master)
+
 # Variables pour le tir
 dragging = False  # Indique si on est en train de viser
 follow_projectile = False

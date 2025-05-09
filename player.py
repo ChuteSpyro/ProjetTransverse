@@ -33,11 +33,11 @@ class Player(pygame.sprite.Sprite) :
         bar_color = (111,210,46)
         back_bar_color = (60,63,60)
 
-        bar_position = [self.rect.x + 50 - camera.offset.x,
-                        self.rect.y + 20 - camera.offset.y,
+        bar_position = [self.rect.x + 10 - camera.offset.x,
+                        self.rect.y - 20 - camera.offset.y,
                         self.health, 5]
-        back_bar_position = [self.rect.x + 50 - camera.offset.x,
-                             self.rect.y + 20 - camera.offset.y,
+        back_bar_position = [self.rect.x + 10 - camera.offset.x,
+                             self.rect.y - 20 - camera.offset.y,
                              self.max_health, 5]
 
         pygame.draw.rect(surface, back_bar_color, back_bar_position)
