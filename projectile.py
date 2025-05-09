@@ -38,16 +38,26 @@ class Projectile(pygame.sprite.Sprite):
         #En utilisant la seconde loi de Newton, on néglige déliberemment le frottement de l'air.
         self.rotate()
 
-
         for user in self.user.game.check_collision(self, self.user.game.all_player):
             if self.time > 3 :
                 user.damage(self.user.attack)
                 self.remove()
+                return
 
         for user in self.user.game.check_collision(self, self.user.game.all_master):
             if self.time > 3 :
                 user.damage(self.user.attack)
                 self.remove()
+                return
+
+        terrain_mask = self.user.game.terrain_mask
+        if terrain_mask:
+            offset = (int(self.rect.x), int(self.rect.y))
+            projectile_mask = pygame.mask.from_surface(self.image)
+            if terrain_mask.overlap(projectile_mask, offset):
+                self.user.all_projectiles.remove(self)
+                self.user.game.stuck_projectiles.add(self)
+                return
 
         if self.rect.y > 1080:
             self.remove()

@@ -17,6 +17,9 @@ class Game:
         self.master = Master(self)
         self.all_master.add(self.master)
 
+        self.stuck_projectiles = pygame.sprite.Group()
+        self.terrain_mask = None
+
         self.pressed = {}
 
 
@@ -30,6 +33,9 @@ class Game:
             rect = camera.apply(self.master.rect)
             screen.blit(self.master.image, rect)
             self.master.update_health_bar(screen, camera)
+
+        for projectile in self.stuck_projectiles:
+            screen.blit(projectile.image, camera.apply(projectile.rect))
 
         if self.player is not None:
             for projectile in self.player.all_projectiles:
