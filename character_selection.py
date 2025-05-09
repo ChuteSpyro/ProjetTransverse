@@ -1,96 +1,196 @@
 import pygame
 import sys
 
-# Initialisation de Pygame
+# Initialisation de pygame
 pygame.init()
-background = pygame.image.load("assets/bg.jpg")
+info = pygame.display.Info()
+WIDTH, HEIGHT = 800, 600  # Définition d'une taille de fenêtre plus petite
+screen = pygame.display.set_mode((WIDTH, HEIGHT))  # Suppression de pygame.FULLSCREEN
+pygame.display.set_caption("Sélection des personnages et armes")
+
+# Chargement des images
+background = pygame.image.load("assets/bg.png")
 left_img = pygame.image.load("assets/left_button.png")
 right_img = pygame.image.load("assets/right_button.png")
 confirm_img = pygame.image.load("assets/confirm_button.png")
 
-def select_character(screen):
-    # Dimensions de la fenêtre
-    screen.blit(background, (0, -200))
-    WIDTH, HEIGHT = screen.get_size()
-    pygame.display.set_caption("Choose character and weapon")
+# Redimensionnement dynamique des images
+def resize_image(img, scale):
+    return pygame.transform.scale(img, (int(img.get_width() * scale), int(img.get_height() * scale)))
 
-    # Couleurs utilisées
-    WHITE = (255, 255, 255)
-    BLACK = (0, 0, 0)
-    GRAY = (200, 200, 200)
-    BLUE = (50, 100, 200)
-    GREEN = (50, 200, 50)
+left_img = resize_image(left_img, 0.1)
+right_img = resize_image(right_img, 0.1)
+confirm_img = resize_image(confirm_img, 0.5)
 
-    # Liste des personnages
-    characters = ["Guerrier", "Mage", "Archer", "Voleur"]
-    selected_index = 0
+character_images = {
+    "fleur": pygame.image.load("assets/fleur.png"),
+    "ghost": pygame.image.load("assets/ghost.png"),
+}
 
-    # Liste des armes
-    weapons = ["Épée", "Bâton magique", "Arc", "Dagues"]
-    selected_weapon_index = 0
+weapon_images = {
+    "Axe": pygame.image.load("assets/Axe.png"),
+    "dagger": pygame.image.load("assets/dagger.png"),
+}
 
-    # Définition des zones (rectangles) pour les boutons
-    left_button = left_img.get_rect(topleft=(50, HEIGHT // 2 + 15))
-    right_button = right_img.get_rect(topleft=(WIDTH - 100, HEIGHT // 2 + 15))
-    confirm_button = confirm_img.get_rect(center=(WIDTH // 2, HEIGHT - 75))
+characters = ["fleur", "ghost"]
+weapons = ["Axe", "dagger"]
+font = pygame.font.Font(None, 48)
 
-    weapon_left_button = left_img.get_rect(topleft=(50, HEIGHT // 2 + 15))
-    weapon_right_button = right_img.get_rect(topleft=(WIDTH - 100, HEIGHT // 2 + 15))
-    weapon_confirm_button = confirm_img.get_rect(center=(WIDTH // 2, HEIGHT - 75))
+def draw_selection(screen, x, y, label, name, left_button, right_button, confirm_button, is_character=True):
+    text = font.render(label, True, (255, 255, 255))
+    screen.blit(text, (x, y))
 
-    # Police pour l'affichage du texte
-    font = pygame.font.Font(None, 36)
+    if is_character:
+        image = pygame.transform.scale(character_images[name], (200, 200))
+    else:
+        image = pygame.transform.scale(weapon_images[name], (200, 200))
 
-    # Variables de sélection
-    selected_character = None
-    selected_weapon = None
-    character_selected = False
+    screen.blit(image, (x + 100, y + 40))
+    screen.blit(left_img, left_button.topleft)
+    screen.blit(right_img, right_button.topleft)
+    screen.blit(confirm_img, confirm_button.topleft)
 
-    running = True
-    while running:
+def character_and_weapon_select(screen):
+    p1 = {"char": 0, "weapon": 0, "ready": False}
+    p2 = {"char": 0, "weapon": 0, "ready": False}
+
+    while True:
+        screen.blit(pygame.transform.scale(background, (WIDTH, HEIGHT)), (0, 0))
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_pos = event.pos
+                mx, my = pygame.mouse.get_pos()
+                if not p1["ready"]:
+                    if left1_char.collidepoint((mx, my)):
+                        p1["char"] = (p1["char"] - 1) % len(characters)
+                    elif right1_char.collidepoint((mx, my)):
+                        p1["char"] = (p1["char"] + 1) % len(characters)
+                    elif left1_weapon.collidepoint((mx, my)):
+                        p1["weapon"] = (p1["weapon"] - 1) % len(weapons)
+                    elif right1_weapon.collidepoint((mx, my)):
+                        p1["weapon"] = (p1["weapon"] + 1) % len(weapons)
+                    elif confirm1.collidepoint((mx, my)):
+                        p1["ready"] = True
+                if not p2["ready"]:
+                    if left2_char.collidepoint((mx, my)):
+                        p2["char"] = (p2["char"] - 1) % len(characters)
+                    elif right2_char.collidepoint((mx, my)):
+                        p2["char"] = (p2["char"] + 1) % len(characters)
+                    elif left2_weapon.collidepoint((mx, my)):
+                        p2["weapon"] = (p2["weapon"] - 1) % len(weapons)
+                    elif right2_weapon.collidepoint((mx, my)):
+                        p2["weapon"] = (p2["weapon"] + 1) % len(weapons)
+                    elif confirm2.collidepoint((mx, my)):
+                        p2["ready"] = True
 
-                if not character_selected:
-                    if left_button.collidepoint(mouse_pos):
-                        selected_index = (selected_index - 1) % len(characters)
-                    elif right_button.collidepoint(mouse_pos):
-                        selected_index = (selected_index + 1) % len(characters)
-                    elif confirm_button.collidepoint(mouse_pos):
-                        selected_character = characters[selected_index]
-                        character_selected = True
-                else:
-                    if weapon_left_button.collidepoint(mouse_pos):
-                        selected_weapon_index = (selected_weapon_index - 1) % len(weapons)
-                    elif weapon_right_button.collidepoint(mouse_pos):
-                        selected_weapon_index = (selected_weapon_index + 1) % len(weapons)
-                    elif weapon_confirm_button.collidepoint(mouse_pos):
-                        selected_weapon = weapons[selected_weapon_index]
-                        running = False
+        # Placement dynamique des éléments sur l'écran
+        x1 = WIDTH * 0.1
+        x2 = WIDTH * 0.65
+        y_char = HEIGHT * 0.2
+        y_weapon = HEIGHT * 0.55
 
-        if not character_selected:
-            character_rect = pygame.Rect(WIDTH // 2 - 75, HEIGHT // 2 - 75, 150, 150)
-            pygame.draw.rect(screen, GRAY, character_rect)
-            character_text = font.render(characters[selected_index], True, BLACK)
-            text_rect = character_text.get_rect(center=character_rect.center)
-            screen.blit(character_text, text_rect)
+        left1_char = left_img.get_rect(topleft=(x1, y_char + 50))
+        right1_char = right_img.get_rect(topleft=(x1 + 250, y_char + 50))
+        confirm1 = confirm_img.get_rect(topleft=(x1 + 100, y_weapon + 220))
+        left1_weapon = left_img.get_rect(topleft=(x1, y_weapon + 50))
+        right1_weapon = right_img.get_rect(topleft=(x1 + 250, y_weapon + 50))
 
-            screen.blit(left_img, left_button.topleft)
-            screen.blit(right_img, right_button.topleft)
-            screen.blit(confirm_img, confirm_button.topleft)
-        else:
-            weapon_rect = pygame.Rect(WIDTH // 2 - 75, HEIGHT // 2 - 75, 150, 150)
-            pygame.draw.rect(screen, GRAY, weapon_rect)
-            weapon_text = font.render(weapons[selected_weapon_index], True, BLACK)
-            weapon_text_rect = weapon_text.get_rect(center=weapon_rect.center)
-            screen.blit(weapon_text, weapon_text_rect)
+        left2_char = left_img.get_rect(topleft=(x2, y_char + 50))
+        right2_char = right_img.get_rect(topleft=(x2 + 250, y_char + 50))
+        confirm2 = confirm_img.get_rect(topleft=(x2 + 100, y_weapon + 220))
+        left2_weapon = left_img.get_rect(topleft=(x2, y_weapon + 50))
+        right2_weapon = right_img.get_rect(topleft=(x2 + 250, y_weapon + 50))
 
-            screen.blit(left_img, weapon_left_button.topleft)
-            screen.blit(right_img, weapon_right_button.topleft)
-            screen.blit(confirm_img, weapon_confirm_button.topleft)
+        draw_selection(screen, x1, y_char, "Perso J1", characters[p1["char"]], left1_char, right1_char, confirm1, True)
+        draw_selection(screen, x1, y_weapon, "Arme J1", weapons[p1["weapon"]], left1_weapon, right1_weapon, confirm1, False)
+        draw_selection(screen, x2, y_char, "Perso J2", characters[p2["char"]], left2_char, right2_char, confirm2, True)
+        draw_selection(screen, x2, y_weapon, "Arme J2", weapons[p2["weapon"]], left2_weapon, right2_weapon, confirm2, False)
+
+        if p1["ready"]:
+            screen.blit(font.render("READY", True, (0, 255, 0)), (x1 + 120, y_weapon + 280))
+        if p2["ready"]:
+            screen.blit(font.render("READY", True, (0, 255, 0)), (x2 + 120, y_weapon + 280))
+
         pygame.display.flip()
+
+        if p1["ready"] and p2["ready"]:
+            pygame.time.delay(1000)
+            return {
+                "joueur1": {"personnage": characters[p1["char"]], "arme": weapons[p1["weapon"]]},
+                "joueur2": {"personnage": characters[p2["char"]], "arme": weapons[p2["weapon"]]},
+            }
+
+if __name__ == "__main__":
+    choix = character_and_weapon_select(screen)
+    print("Sélections faites :")
+    print(choix)
+
+def map_selection(screen):
+    pygame.display.set_caption("Sélection de la carte")
+    font = pygame.font.Font(None, 36)
+
+    maps = ["Forêt", "Désert", "Lave"]
+    selected = 0
+
+    running = True
+    while running:
+        screen.fill((50, 50, 50))
+        title = font.render("Choisissez la carte", True, (255, 255, 255))
+        screen.blit(title, (WIDTH // 2 - title.get_width() // 2, 50))
+
+        for i, name in enumerate(maps):
+            color = (0, 200, 0) if i == selected else (200, 200, 200)
+            pygame.draw.rect(screen, color, (WIDTH // 2 - 100, 150 + i * 80, 200, 60))
+            text = font.render(name, True, (0, 0, 0))
+            screen.blit(text, (WIDTH // 2 - text.get_width() // 2, 165 + i * 80))
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    selected = (selected - 1) % len(maps)
+                elif event.key == pygame.K_DOWN:
+                    selected = (selected + 1) % len(maps)
+                elif event.key == pygame.K_RETURN:
+                    return maps[selected]
+
+        pygame.display.flip()
+
+def map_selection(screen):
+    pygame.display.set_caption("Sélection de la carte")
+    font = pygame.font.Font(None, 36)
+
+    maps = ["Forêt", "Désert", "Lave"]
+    selected = 0
+
+    running = True
+    while running:
+        screen.fill((50, 50, 50))
+        title = font.render("Choisissez la carte", True, (255, 255, 255))
+        screen.blit(title, (WIDTH // 2 - title.get_width() // 2, 50))
+
+        for i, name in enumerate(maps):
+            color = (0, 200, 0) if i == selected else (200, 200, 200)
+            pygame.draw.rect(screen, color, (WIDTH // 2 - 100, 150 + i * 80, 200, 60))
+            text = font.render(name, True, (0, 0, 0))
+            screen.blit(text, (WIDTH // 2 - text.get_width() // 2, 165 + i * 80))
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    selected = (selected - 1) % len(maps)
+                elif event.key == pygame.K_DOWN:
+                    selected = (selected + 1) % len(maps)
+                elif event.key == pygame.K_RETURN:
+                    return maps[selected]
+
+        pygame.display.flip()
+

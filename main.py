@@ -2,8 +2,9 @@ import pygame
 from game import Game
 from map import *
 import math
-from character_selection import select_character
+from character_selection import character_and_weapon_select, map_selection
 from camera import Camera
+from accueil import afficher_accueil
 
 
 pygame.init()
@@ -26,7 +27,7 @@ screen = pygame.display.set_mode((1080,720))
 camera = Camera(*screen.get_size())
 
 
-selected_character = select_character(screen)
+
 
 banner = pygame.image.load("assets/banner.png")
 banner = pygame.transform.scale(banner, (500,500))
@@ -41,7 +42,7 @@ play_button_rect.x = (screen.get_width() - play_button.get_width()) // 2 + 9
 play_button_rect.y = (screen.get_height() - banner.get_height()) // 2 + 300
 
 
-
+afficher_accueil(screen)  # Affiche le menu avant de démarrer le jeu
 game = Game()
 clock = pygame.time.Clock()
 
@@ -53,8 +54,12 @@ follow_target = None
 
 running = True
 playing = "player"
-while running:
 
+choix_joueurs = character_and_weapon_select(screen)
+carte = map_selection(screen)
+game.is_playing = True
+
+while running:
 
     dt = clock.tick(60) / 1000.0
     # Update camera to follow the current active character or projectile
