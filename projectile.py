@@ -9,7 +9,7 @@ class Projectile(pygame.sprite.Sprite):
         super().__init__()
         self.velocity = velocity
         self.user = user
-        self.image = pygame.image.load('assets/dagger.png').convert_alpha()
+        self.image = pygame.image.load('assets/weapons/dagger.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, (50, 50))
         self.rect = self.image.get_rect(center=user.rect.center)
         self.start_x = self.rect.x
