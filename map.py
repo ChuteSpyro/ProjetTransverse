@@ -5,6 +5,7 @@ def generate_map(width, height, tile_size):
     DIRT = (139, 69, 19)
     GRASS = (34, 139, 34)
 
+
     surface = pygame.Surface((width, height), pygame.SRCALPHA)
     surface.fill((0, 0, 0, 0))
 
@@ -24,10 +25,16 @@ def generate_map(width, height, tile_size):
             x_slope = x_end + abs(delta_y)
             y_new = max(tile_size * 2, min(y + delta_y, height - tile_size))
             # Pente
+            # Pente
             pygame.draw.polygon(surface, DIRT, [(x_end, y), (x_slope, y_new), (x_slope, height), (x_end, height)])
-            for j in range(abs(x_slope - x_end)):
-                x_line = x_end + j if x_slope > x_end else x_end - j
-                y_line = y + j if y_new > y else y - j
+
+            dx = x_slope - x_end
+            dy = y_new - y
+
+            for j in range(abs(dx)):
+                t = j / abs(dx)
+                x_line = x_end + j if dx > 0 else x_end - j
+                y_line = int(y + t * dy)
                 pygame.draw.line(surface, GRASS, (x_line, y_line), (x_line, y_line + 10))
             x = x_slope
             y = y_new

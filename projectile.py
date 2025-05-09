@@ -57,6 +57,8 @@ class Projectile(pygame.sprite.Sprite):
             if terrain_mask.overlap(projectile_mask, offset):
                 self.user.all_projectiles.remove(self)
                 self.user.game.stuck_projectiles.add(self)
+                pygame.mixer.music.load("assets/sounds/Musique_de_fond.mp3")
+                pygame.mixer.music.play(-1)  # -1 = boucle infinie
                 return
 
         if self.rect.y > 1080:
