@@ -28,8 +28,6 @@ class Projectile(pygame.sprite.Sprite):
         self.grass_sound = pygame.mixer.Sound("assets/sounds/sword_in_ground.mp3")
         self.pain_sound = pygame.mixer.Sound("assets/sounds/caracter_hurt.mp3")
 
-
-
     def rotate(self):
         self.rotate_angle += 20
         self.image = pygame.transform.rotozoom(self.origin_image, self.rotate_angle, 1)

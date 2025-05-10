@@ -1,3 +1,4 @@
+
 import pygame
 from game import Game
 from map import *
@@ -6,25 +7,22 @@ from character_selection import character_and_weapon_select, map_selection
 from camera import Camera
 from accueil import afficher_accueil
 
-# Initialisation Pygame
+
 pygame.init()
-pygame.mixer.init()
+
 pygame.display.set_caption("Simple Game")
 
-# Constantes
+#MAP
 WIDTH, HEIGHT = 4000, 720
 TILE_SIZE = 100
+
+
 SKY = (135, 206, 235)
 
-# Music
-pygame.mixer.music.load("assets/sounds/Musique_de_fond.mp3")
-pygame.mixer.music.play(-1)  # -1 = boucle infinie
 
-# Génération du fond et du masque terrain
-background, terrain_mask = generate_map(WIDTH, HEIGHT, TILE_SIZE)
 
-# Écran et caméra
-screen = pygame.display.set_mode((1080, 720))
+
+screen = pygame.display.set_mode((1080,720))
 camera = Camera(*screen.get_size())
 # Génération du sol
 
@@ -75,6 +73,7 @@ start_zoom = 1.0
 end_zoom = 1.5
 zoom_current = start_zoom
 zoom_smooth_speed = 2.0
+
 running = True
 playing = "player"
 
@@ -90,11 +89,7 @@ while running:
 
 
     dt = clock.tick(60) / 1000.0
-
-    if game.is_playing :
-        pygame.mixer.music.stop()
-
-    # Logique de caméra si le jeu est actif
+    # Camera logic runs only when the game has started
     if game.is_playing:
         # Intro wide shot before gameplay zoom and follow
         if intro:
@@ -119,11 +114,12 @@ while running:
             elif playing == "master" and game.master is not None:
                 camera.smooth_update(game.master, dt)
 
-    # Rendu du jeu
     if game.is_playing:
         # Create a viewport surface to draw everything non-zoomed
         viewport = pygame.Surface(screen.get_size())
-        viewport.fill(SKY)
+        viewport.fill((180, 230, 255))
+
+        # Draw background at camera offset
         bg_rect = background.get_rect()
         bg_rect.topleft = -camera.offset
         viewport.blit(background, bg_rect)
@@ -198,6 +194,18 @@ while running:
         elif event.type == pygame.KEYDOWN:
             game.pressed[event.key] = True
 
+            if event.key == pygame.K_RETURN:
+                  # Garder cette ligne si tu veux un autre mode de tir
+                if playing == "player" and game.player is not None:
+                    game.player.launch_player_projectile(45)
+                    playing = "master"
+                    break
+
+                if playing == "master" and game.master is not None:
+                    game.master.launch_master_projectile(-45)
+                    playing = "player"
+                    break
+
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if play_button_rect.collidepoint(event.pos):
                 game.is_playing = True
@@ -225,9 +233,11 @@ while running:
                 power_ratio = min(distance / 300, 1.0)
                 speed = power_ratio * 90
                 game.player.launch_player_projectile(angle, speed)
-                playing = "master"
-
-                proj = game.player.all_projectiles.sprites()[-1]
+                playing = "master"  # Switch to master for the next round
+                if playing == "master":
+                    proj = game.player.all_projectiles.sprites()[-1]
+                else:
+                    proj = game.master.all_projectiles.sprites()[-1]
                 follow_target = proj
                 follow_projectile = True
                 follow_timer = 0.0
@@ -247,9 +257,11 @@ while running:
                 power_ratio = min(distance / 300, 1.0)
                 speed = power_ratio * 90
                 game.master.launch_master_projectile(angle, speed)
-                playing = "player"
-
-                proj = game.master.all_projectiles.sprites()[-1]
+                playing = "player"  # Switch to player for the next round
+                if playing == "master":
+                    proj = game.player.all_projectiles.sprites()[-1]
+                else:
+                    proj = game.master.all_projectiles.sprites()[-1]
                 follow_target = proj
                 follow_projectile = True
                 follow_timer = 0.0

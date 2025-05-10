@@ -1,3 +1,4 @@
+
 import pygame
 
 def afficher_accueil(screen):
