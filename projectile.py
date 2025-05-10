@@ -18,8 +18,13 @@ class Projectile(pygame.sprite.Sprite):
         self.time = 0.0
         self.rotate_angle = 0
         self.angle = angle
-        self.gravity = 9.81
-
+        carte = self.user.game.carte
+        if carte == "Mars":
+            self.gravity = 3.73
+        elif carte == "Moon":
+            self.gravity = 1.72
+        elif carte == "Earth":
+            self.gravity = 9.81
 
     def rotate(self):
         self.rotate_angle += 20
