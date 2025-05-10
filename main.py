@@ -19,7 +19,8 @@ TILE_SIZE = 100
 
 SKY = (135, 206, 235)
 
-
+pygame.mixer.music.load("assets/sounds/Musique_de_fond.mp3")
+pygame.mixer.music.play(-1)  # -1 = boucle infinie
 
 
 screen = pygame.display.set_mode((1080,720))
@@ -87,6 +88,8 @@ clock = pygame.time.Clock()
 
 while running:
 
+    if game.is_playing :
+        pygame.mixer.music.stop()
 
     dt = clock.tick(60) / 1000.0
     # Camera logic runs only when the game has started
