@@ -4,10 +4,10 @@ def afficher_accueil(screen):
     WIDTH, HEIGHT = 1080, 720
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     # images de fond
-    background = pygame.image.load("assets/mpbg.png")
+    background = pygame.image.load("assets/backgrounds/mpbg.png")
     background = pygame.transform.scale(background, (WIDTH, HEIGHT))
 
-    play_button = pygame.image.load("assets/play_button.png")
+    play_button = pygame.image.load("assets/buttons/play_button.png")
     play_button = pygame.transform.scale(play_button, (400,150))
     play_button_rect = play_button.get_rect()
     play_button_rect.x = (screen.get_width() - play_button.get_width()) // 2 +9 # changes the pos in x coordinates

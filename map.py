@@ -1,9 +1,16 @@
 import pygame
 import random
 
-def generate_map(width, height, tile_size):
-    DIRT = (139, 69, 19)
-    GRASS = (34, 139, 34)
+def generate_map(width, height, tile_size,map_name):
+    if map_name == "Earth":
+        DIRT = (139, 69, 19)
+        GRASS = (34, 139, 34)
+    elif map_name == "Moon":
+        DIRT = (120, 120, 120)
+        GRASS = (180, 180, 180)
+    elif map_name == "Mars":
+        DIRT = (178, 34, 34)
+        GRASS = (255, 140, 0)
 
 
     surface = pygame.Surface((width, height), pygame.SRCALPHA)

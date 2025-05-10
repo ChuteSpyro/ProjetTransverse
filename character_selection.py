@@ -13,12 +13,12 @@ pygame.display.set_caption("Sélection des persos et map")
 font = pygame.font.Font(None, 48)
 
 # images de fond et boutons
-background = pygame.image.load("assets/bg.png")
+background = pygame.image.load("assets/backgrounds/bg.png")
 background = pygame.transform.scale(background, (WIDTH, HEIGHT))
 
-left_img = pygame.image.load("assets/left_button.png")
-right_img = pygame.image.load("assets/right_button.png")
-confirm_img = pygame.image.load("assets/confirm_button.png")
+left_img = pygame.image.load("assets/buttons/left_button.png")
+right_img = pygame.image.load("assets/buttons/right_button.png")
+confirm_img = pygame.image.load("assets/buttons/confirm_button.png")
 
 # on les rend plus petits
 left_img = pygame.transform.scale(left_img, (50, 50))
@@ -27,12 +27,12 @@ confirm_img = pygame.transform.scale(confirm_img, (150, 60))
 
 # persos et armes
 character_images = {
-    "fleur": pygame.image.load("assets/fleur.png"),
-    "ghost": pygame.image.load("assets/ghost.png"),
+    "fleur": pygame.image.load("assets/characters/fleur.png"),
+    "ghost": pygame.image.load("assets/characters/ghost.png"),
 }
 weapon_images = {
-    "Axe": pygame.image.load("assets/Axe.png"),
-    "dagger": pygame.image.load("assets/dagger.png"),
+    "Axe": pygame.image.load("assets/weapons/Axe.png"),
+    "dagger": pygame.image.load("assets/weapons/dagger.png"),
 }
 
 characters = ["fleur", "ghost"]
@@ -146,12 +146,12 @@ def character_and_weapon_select(screen):
 def map_selection(screen):
     pygame.display.set_caption("Choix de la map")
 
-    bg = pygame.image.load("assets/bg.png")
+    bg = pygame.image.load("assets/backgrounds/bg.png")
     bg = pygame.transform.scale(bg, (WIDTH, HEIGHT))
 
-    earth_img = pygame.image.load("assets/button_earth.png")
-    moon_img = pygame.image.load("assets/button_moon.png")
-    mars_img = pygame.image.load("assets/button_mars.png")
+    earth_img = pygame.image.load("assets/buttons/button_earth.png")
+    moon_img = pygame.image.load("assets/buttons/button_moon.png")
+    mars_img = pygame.image.load("assets/buttons/button_mars.png")
 
     earth_rect = earth_img.get_rect(center=(WIDTH // 2, 250))
     moon_rect = moon_img.get_rect(center=(WIDTH // 2, 370))
