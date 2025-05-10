@@ -1,18 +1,17 @@
 import pygame
 
 def afficher_accueil(screen):
-    banner = pygame.image.load("assets/banner.png")
-    banner = pygame.transform.scale(banner, (500,500))
-    banner_rect = banner.get_rect()
-    banner_rect.x = (screen.get_width() - banner.get_width()) // 2
-    banner_rect.y = (screen.get_height() - banner.get_height()) // 2 - 70
+    WIDTH, HEIGHT = 1080, 720
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    # images de fond
+    background = pygame.image.load("assets/backgrounds/mpbg.png")
+    background = pygame.transform.scale(background, (WIDTH, HEIGHT))
 
-    play_button = pygame.image.load("assets/play_button.png")
+    play_button = pygame.image.load("assets/buttons/play_button.png")
     play_button = pygame.transform.scale(play_button, (400,150))
     play_button_rect = play_button.get_rect()
-    play_button_rect.x = (screen.get_width() - play_button.get_width()) // 2 + 9
-    play_button_rect.y = (screen.get_height() - banner.get_height()) // 2 + 300
-
+    play_button_rect.x = (screen.get_width() - play_button.get_width()) // 2 +9 # changes the pos in x coordinates
+    play_button_rect.y = 400  # changes the pos in y coordinates
     waiting = True
     clock = pygame.time.Clock()
 
@@ -26,8 +25,7 @@ def afficher_accueil(screen):
                 if play_button_rect.collidepoint(event.pos):
                     return  # L'utilisateur a cliqué sur "Play"
 
-        screen.fill((0, 0, 0))
+        screen.blit(background, (0, 0))  # <- Affiche le fond
         screen.blit(play_button, play_button_rect)
-        screen.blit(banner, banner_rect)
         pygame.display.flip()
         clock.tick(60)

@@ -18,24 +18,24 @@ TILE_SIZE = 100
 
 SKY = (135, 206, 235)
 
-# Génération du sol
 
-background, terrain_mask = generate_map(WIDTH, HEIGHT, TILE_SIZE)
 
 
 screen = pygame.display.set_mode((1080,720))
 camera = Camera(*screen.get_size())
+# Génération du sol
 
+background, terrain_mask = generate_map(WIDTH, HEIGHT, TILE_SIZE, map_selection(screen))
 
 #selected_character = select_character(screen)
 
-banner = pygame.image.load("assets/banner.png")
+banner = pygame.image.load("assets/banner/moon_bg.jpg")
 banner = pygame.transform.scale(banner, (500,500))
 banner_rect = banner.get_rect()
 banner_rect.x = (screen.get_width() - banner.get_width()) // 2
 banner_rect.y = (screen.get_height() - banner.get_height()) // 2 - 70
 
-play_button = pygame.image.load("assets/play_button.png")
+play_button = pygame.image.load("assets/buttons/play_button.png")
 play_button = pygame.transform.scale(play_button, (400,150))
 play_button_rect = play_button.get_rect()
 play_button_rect.x = (screen.get_width() - play_button.get_width()) // 2 + 9
@@ -78,6 +78,7 @@ playing = "player"
 
 choix_joueurs = character_and_weapon_select(screen)
 carte = map_selection(screen)
+game.carte = carte
 game.is_playing = True
 intro = True
 intro_timer = 0.0

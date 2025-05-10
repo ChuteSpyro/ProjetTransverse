@@ -9,7 +9,7 @@ class Projectile(pygame.sprite.Sprite):
         super().__init__()
         self.velocity = velocity
         self.user = user
-        self.image = pygame.image.load('assets/dagger.png').convert_alpha()
+        self.image = pygame.image.load('assets/weapons/dagger.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, (50, 50))
         self.rect = self.image.get_rect(center=user.rect.center)
         self.start_x = self.rect.x
@@ -18,8 +18,13 @@ class Projectile(pygame.sprite.Sprite):
         self.time = 0.0
         self.rotate_angle = 0
         self.angle = angle
-        self.gravity = 9.81
-
+        carte = self.user.game.carte
+        if carte == "Mars":
+            self.gravity = 3.73
+        elif carte == "Moon":
+            self.gravity = 1.72
+        elif carte == "Earth":
+            self.gravity = 9.81
 
     def rotate(self):
         self.rotate_angle += 20
