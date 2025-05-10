@@ -45,7 +45,7 @@ play_button_rect.y = (screen.get_height() - banner.get_height()) // 2 + 300
 afficher_accueil(screen)  # Affiche le menu avant de démarrer le jeu
 game = Game()
 game.terrain_mask = terrain_mask
-clock = pygame.time.Clock()
+
 
 def place_on_ground(sprite):
     # on prend le centre horizontal du sprite
@@ -79,6 +79,9 @@ playing = "player"
 choix_joueurs = character_and_weapon_select(screen)
 carte = map_selection(screen)
 game.is_playing = True
+intro = True
+intro_timer = 0.0
+clock = pygame.time.Clock()
 
 while running:
 
