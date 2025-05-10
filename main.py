@@ -2,7 +2,7 @@ import pygame
 from game import Game
 from map import *
 import math
-from character_selection import character_and_weapon_select, map_selection
+
 from camera import Camera
 from accueil import afficher_accueil
 
