@@ -1,4 +1,3 @@
-
 import pygame
 
 def afficher_accueil(screen):
@@ -8,15 +7,25 @@ def afficher_accueil(screen):
     background = pygame.image.load("assets/backgrounds/mpbg.png")
     background = pygame.transform.scale(background, (WIDTH, HEIGHT))
 
+    play_button_hover = pygame.image.load("assets/buttons/button_play_hover.png")
     play_button = pygame.image.load("assets/buttons/play_button.png")
+    play_button_hover = pygame.image.load("assets/buttons/button_play_hover.png")
+
+    #dimentions of the buttons
     play_button = pygame.transform.scale(play_button, (400,150))
+    play_button_hover = pygame.transform.scale(play_button_hover, (400,150))
+
     play_button_rect = play_button.get_rect()
     play_button_rect.x = (screen.get_width() - play_button.get_width()) // 2 +9 # changes the pos in x coordinates
     play_button_rect.y = 400  # changes the pos in y coordinates
+
     waiting = True
     clock = pygame.time.Clock()
 
     while waiting:
+
+        mx, my = pygame.mouse.get_pos()
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -27,6 +36,12 @@ def afficher_accueil(screen):
                     return  # L'utilisateur a cliqué sur "Play"
 
         screen.blit(background, (0, 0))  # <- Affiche le fond
-        screen.blit(play_button, play_button_rect)
+
+        # Affiche le bouton normal ou hover selon la position de la souris
+        if play_button_rect.collidepoint((mx, my)):
+            screen.blit(play_button_hover, play_button_rect)
+        else:
+            screen.blit(play_button, play_button_rect)
+
         pygame.display.flip()
         clock.tick(60)

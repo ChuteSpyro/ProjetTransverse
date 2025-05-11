@@ -3,7 +3,7 @@ import pygame
 from game import Game
 from map import *
 import math
-from character_selection import character_and_weapon_select, map_selection
+from character_selection import character_and_weapon_select, map_selection, weapons
 from camera import Camera
 from accueil import afficher_accueil
 
@@ -13,7 +13,7 @@ pygame.init()
 pygame.display.set_caption("Simple Game")
 
 #MAP
-WIDTH, HEIGHT = 4000, 720
+WIDTH, HEIGHT = 6000, 720
 TILE_SIZE = 100
 
 
@@ -25,11 +25,9 @@ pygame.mixer.music.play(-1)  # -1 = boucle infinie
 
 screen = pygame.display.set_mode((1080,720))
 camera = Camera(*screen.get_size())
-# Génération du sol
 
-background, terrain_mask = generate_map(WIDTH, HEIGHT, TILE_SIZE, map_selection(screen))
 
-#selected_character = select_character(screen)
+
 
 banner = pygame.image.load("assets/banner/moon_bg.jpg")
 banner = pygame.transform.scale(banner, (500,500))
@@ -45,8 +43,10 @@ play_button_rect.y = (screen.get_height() - banner.get_height()) // 2 + 300
 
 
 afficher_accueil(screen)  # Affiche le menu avant de démarrer le jeu
-game = Game()
-game.terrain_mask = terrain_mask
+selection = character_and_weapon_select(screen)
+
+game = Game(selection)
+
 
 
 
@@ -60,15 +60,6 @@ falling_player = True
 falling_master = True
 gravity = 981  # pixels per second squared
 
-def get_ground_y(sprite):
-    x_center = sprite.rect.x + sprite.rect.width // 2
-    for y in range(HEIGHT):
-        if terrain_mask.get_at((x_center, y)):
-            return y
-    return HEIGHT
-
-ground_y_player = get_ground_y(game.player)
-ground_y_master = get_ground_y(game.master)
 
 # Variables pour le tir
 dragging = False  # Indique si on est en train de viser
@@ -86,16 +77,31 @@ zoom_smooth_speed = 2.0
 running = True
 playing = "player"
 
-choix_joueurs = character_and_weapon_select(screen)
+
 carte = map_selection(screen)
 game.carte = carte
 game.is_playing = True
 intro = True
 intro_timer = 0.0
 clock = pygame.time.Clock()
-pygame.mixer.music.stop()
 
 
+# Génération du sol
+
+background, terrain_mask = generate_map(WIDTH, HEIGHT, TILE_SIZE, carte)
+game.terrain_mask = terrain_mask
+
+def get_ground_y(sprite):
+    x_center = sprite.rect.x + sprite.rect.width // 2
+    for y in range(HEIGHT):
+        if terrain_mask.get_at((x_center, y)):
+            return y
+    return HEIGHT
+
+ground_y_player = get_ground_y(game.player)
+ground_y_master = get_ground_y(game.master)
+
+pygame.mixer.music.set_volume(0.2)
 while running:
 
     dt = clock.tick(60) / 1000.0
@@ -133,7 +139,7 @@ while running:
         elif follow_projectile and follow_target is not None:
             follow_timer += dt
             camera.smooth_update(follow_target, dt)
-            if follow_timer >= 2.0:
+            if follow_timer >= 3.0:
                 follow_projectile = False
         # Regular smooth follow of active character after intro
         else:
@@ -145,7 +151,12 @@ while running:
     if game.is_playing:
         # Create a viewport surface to draw everything non-zoomed
         viewport = pygame.Surface(screen.get_size())
-        viewport.fill((180, 230, 255))
+        if carte == "Earth":
+            viewport.fill((155, 230, 255))
+        if carte == "Moon":
+            viewport.fill((0, 0, 0))
+        if carte == "Mars":
+            viewport.fill((250, 200, 129))
 
         # Draw background at camera offset
         bg_rect = background.get_rect()
@@ -175,7 +186,14 @@ while running:
             power_ratio = min(distance / 300, 1.0)
             angle = math.atan2(-dy, dx)
             speed = power_ratio * 90
-            gravity = 9.81
+            speed= speed * 1.5
+            if carte == "Earth" :
+                gravity = 9.81
+            if carte == "Moon" :
+                gravity = 1.72
+            if carte == "Mars" :
+                gravity = 3.73
+
 
             # Draw
             for i in range(60):
@@ -225,12 +243,12 @@ while running:
             if event.key == pygame.K_RETURN and not intro:
                   # Garder cette ligne si tu veux un autre mode de tir
                 if playing == "player" and game.player is not None:
-                    game.player.launch_player_projectile(45)
+                    game.player.launch_player_projectile(45,selection['player1']['weapon'])
                     playing = "master"
                     break
 
                 if playing == "master" and game.master is not None:
-                    game.master.launch_master_projectile(-45)
+                    game.master.launch_master_projectile(-45,selection['player2']['weapon'])
                     playing = "player"
                     break
 
@@ -260,7 +278,8 @@ while running:
                 distance = math.hypot(dx, dy)
                 power_ratio = min(distance / 300, 1.0)
                 speed = power_ratio * 90
-                game.player.launch_player_projectile(angle, speed)
+                speed = speed * 1.5
+                game.player.launch_player_projectile(angle,selection['player1']['weapon'] ,speed)
                 playing = "master"  # Switch to master for the next round
                 if playing == "master":
                     proj = game.player.all_projectiles.sprites()[-1]
@@ -284,7 +303,8 @@ while running:
                 distance = math.hypot(dx, dy)
                 power_ratio = min(distance / 300, 1.0)
                 speed = power_ratio * 90
-                game.master.launch_master_projectile(angle, speed)
+                speed = speed * 1.5
+                game.master.launch_master_projectile(angle,selection['player2']['weapon'],speed)
                 playing = "player"  # Switch to player for the next round
                 if playing == "master":
                     proj = game.player.all_projectiles.sprites()[-1]

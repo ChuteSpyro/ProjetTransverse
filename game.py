@@ -7,15 +7,15 @@ from master import Master
 clock = pygame.time.Clock()
 dt = clock.tick(60) / 1000.0
 class Game:
-    def __init__(self):
+    def __init__(self,choix_joueurs):
         self.is_playing = False
 
         self.all_player = pygame.sprite.Group()
-        self.player = Player(self)
+        self.player = Player(self,choix_joueurs['player1'])
         self.all_player.add(self.player)
 
         self.all_master = pygame.sprite.Group()
-        self.master = Master(self)
+        self.master = Master(self,choix_joueurs['player2'])
         self.all_master.add(self.master)
 
         self.stuck_projectiles = pygame.sprite.Group()

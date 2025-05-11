@@ -5,12 +5,16 @@ import math
 
 
 class Projectile(pygame.sprite.Sprite):
-    def __init__(self, user,angle,velocity):
+    def __init__(self, user,angle,selection,velocity):
         super().__init__()
         self.velocity = velocity
         self.user = user
-        self.image = pygame.image.load('assets/weapons/dagger.png').convert_alpha()
-        self.image = pygame.transform.scale(self.image, (50, 50))
+        if selection == 'dagger':
+            self.image = pygame.image.load('assets/weapons/dagger.png').convert_alpha()
+            self.image = pygame.transform.scale(self.image, (50, 50))
+        if selection == 'Axe':
+            self.image = pygame.image.load('assets/weapons/axe.png').convert_alpha()
+            self.image = pygame.transform.scale(self.image, (90, 90))
         self.rect = self.image.get_rect(center=user.rect.center)
         self.start_x = self.rect.x
         self.start_y = self.rect.y
@@ -27,6 +31,8 @@ class Projectile(pygame.sprite.Sprite):
             self.gravity = 9.81
         self.grass_sound = pygame.mixer.Sound("assets/sounds/sword_in_ground.mp3")
         self.pain_sound = pygame.mixer.Sound("assets/sounds/caracter_hurt.mp3")
+        self.knife_sound = pygame.mixer.Sound("assets/sounds/knife_sound.mp3")
+        self.counter = 0
 
     def rotate(self):
         self.rotate_angle += 20
@@ -44,6 +50,11 @@ class Projectile(pygame.sprite.Sprite):
         #Les formules sont retrouvables en appliquant la seconde loi de newton pour un corps en chute libre avec une potision initiale (C'est de là que provient self.start), et cela nous donne les équations pour les coordonnées x et y.
         #En utilisant la seconde loi de Newton, on néglige déliberemment le frottement de l'air.
         self.rotate()
+        if self.counter >= 7:
+            self.knife_sound.play()
+            self.counter = 0
+        self.counter += 1
+
 
         for user in self.user.game.check_collision(self, self.user.game.all_player):
             if self.time > 3 :

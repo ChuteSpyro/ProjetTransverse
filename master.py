@@ -5,18 +5,24 @@ from projectile import Projectile
 
 
 class Master(pygame.sprite.Sprite) :
-    def __init__(self, game):
+    def __init__(self, game,selection):
         super().__init__()
         self.game = game
         self.health = 100
         self.max_health = 100
         self.attack = 10
         self.all_projectiles = pygame.sprite.Group()
-        self.image = pygame.image.load('assets/characters/ghost.png')
+        if selection['character'] == 'fleur':
+            self.image = pygame.image.load('assets/characters/fleur.png')
+            self.image = pygame.transform.scale(self.image, (150, 150))
+            self.image = pygame.transform.flip(self.image, True, False)
+        if selection['character'] == 'ghost':
+            self.image = pygame.image.load('assets/characters/ghost.png')
+            self.image = pygame.transform.scale(self.image, (150, 150))
         self.image.set_colorkey((255, 255, 255))
         self.rect = self.image.get_rect()
-        self.rect.x = 2000
-        self.rect.y = 200
+        self.rect.x = 3500
+        self.rect.y = 100
 
     def damage(self, damage):
         self.health -= damage
@@ -26,9 +32,9 @@ class Master(pygame.sprite.Sprite) :
             self.kill()
             self.game.master = None
 
-    def launch_master_projectile(self,angle,velocity=50):
+    def launch_master_projectile(self,angle,selection,velocity=50):
         if self is not None:
-            self.all_projectiles.add(Projectile(self,angle,velocity))
+            self.all_projectiles.add(Projectile(self,angle,selection,velocity))
 
 
     def update_health_bar(self, surface, camera):

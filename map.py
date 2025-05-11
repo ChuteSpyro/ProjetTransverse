@@ -13,6 +13,7 @@ def generate_map(width, height, tile_size,map_name):
         GRASS = (255, 140, 0)
 
 
+
     surface = pygame.Surface((width, height), pygame.SRCALPHA)
     surface.fill((0, 0, 0, 0))
 
