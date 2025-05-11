@@ -30,9 +30,7 @@ confirm_img = pygame.transform.scale(confirm_img, (150, 60))
 confirm_hover_img = pygame.transform.scale(confirm_hover_img, (150, 60))
 confirm_clicked_img = pygame.transform.scale(confirm_clicked_img, (150, 60))
 
-# variable to know if the button has been clicked (to know if we need to change the color)
-confirm1_clicked = False  # state of confirm1 button(clicked or not)
-confirm2_clicked = False  # state of confirm2 button(clicked or not)
+
 
 # Load character and weapon images
 character_images = {
@@ -52,6 +50,10 @@ weapons = ["Axe", "dagger"]
 
 def character_and_weapon_select(screen):
     global confirm1_clicked, confirm2_clicked
+
+    # variable to know if the button has been clicked (to know if we need to change the color)
+    confirm1_clicked = False  # state of confirm1 button(clicked or not)
+    confirm2_clicked = False  # state of confirm2 button(clicked or not)
 
     # Start with the first character/weapon for both players
     p1_char, p1_weapon = 0, 0

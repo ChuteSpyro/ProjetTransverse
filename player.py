@@ -3,13 +3,13 @@ from projectile import Projectile
 
 
 class Player(pygame.sprite.Sprite) :
-    def __init__(self, game, selection):
+    def __init__(self, game,selection):
         # Initialize player attributes: game reference, health, attack power, and projectile group
         super().__init__()
         self.game = game
         self.health = 100
         self.max_health = 100
-        self.attack = 10
+        self.attack = 100
         self.all_projectiles = pygame.sprite.Group()
         # Load and scale character sprite based on selection choice
         # Handle 'fleur' character sprite loading
@@ -32,9 +32,12 @@ class Player(pygame.sprite.Sprite) :
 
         # Check for death and remove player from game if health depleted
         if self.health <= 0 :
+            self.game.is_playing = False
+            self.game.game_over = True
             self.game.all_player.remove(self)
             self.kill()
             self.game.player = None
+
 
     def launch_player_projectile(self,angle,selection,velocity=50):
         # Launch a new projectile with specified angle, character selection, and optional velocity

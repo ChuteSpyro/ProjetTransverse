@@ -30,6 +30,7 @@ class Game:
         self.stuck_projectiles = pygame.sprite.Group()
         # Mask for terrain collision detection (to be set when terrain loads)
         self.terrain_mask = None
+        self.game_over = False
 
         self.pressed = {}
 

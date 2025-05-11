@@ -1,7 +1,6 @@
 import pygame
 from projectile import Projectile
 
-
 class Master(pygame.sprite.Sprite) :
     def __init__(self, game,selection):
         # Initialize master attributes: game reference, health, attack power, and projectile group
@@ -9,7 +8,7 @@ class Master(pygame.sprite.Sprite) :
         self.game = game
         self.health = 100
         self.max_health = 100
-        self.attack = 10
+        self.attack = 100
         self.all_projectiles = pygame.sprite.Group()
         # Load and scale character sprite based on selection choice
         # Handle 'fleur' character sprite loading and flip horizontally
@@ -23,7 +22,7 @@ class Master(pygame.sprite.Sprite) :
             self.image = pygame.transform.scale(self.image, (150, 150))
         self.image.set_colorkey((255, 255, 255))
         self.rect = self.image.get_rect()
-        self.rect.x = 3500
+        self.rect.x = 3200
         self.rect.y = 100
 
     def damage(self, damage):
@@ -32,6 +31,8 @@ class Master(pygame.sprite.Sprite) :
 
         # Check for death and remove master from game if health depleted
         if self.health <= 0 :
+            self.game.is_playing = False
+            self.game.game_over = True
             self.game.all_master.remove(self)
             self.kill()
             self.game.master = None

@@ -18,7 +18,7 @@ def generate_map(width, height, tile_size,map_name):
     surface.fill((0, 0, 0, 0))
 
     x = 0
-    y = height - random.randint(3, 5) * tile_size
+    y = height - random.randint(5, 7) * tile_size
 
     while x < width:
         flat_length = random.randint(2, 4) * tile_size
@@ -26,7 +26,7 @@ def generate_map(width, height, tile_size,map_name):
 
         x_end = x + flat_length
         # Segment plat
-        pygame.draw.rect(surface, DIRT, (x, y, flat_length, height - y))
+        pygame.draw.rect(surface, DIRT, (x, y, flat_length, height - y + 30))  # +20 pixels en bas
         pygame.draw.rect(surface, GRASS, (x, y, flat_length, 10))
 
         if delta_y != 0:
