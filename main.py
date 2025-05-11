@@ -24,7 +24,7 @@ pygame.mixer.music.play(-1)  # -1 = boucle infinie
 
 
 screen = pygame.display.set_mode((1080,720))
-camera = Camera(1404,936)
+camera = Camera(1728,1152)
 # Génération du sol
 
 
@@ -71,7 +71,7 @@ intro = True
 intro_timer = 0.0
 intro_duration = 3.0  # seconds of wide shot at game start
 start_zoom = 1.0
-end_zoom = 1.8
+end_zoom = 2.2
 zoom_current = start_zoom
 zoom_smooth_speed = 2.0
 
@@ -128,8 +128,8 @@ while running:
         if intro:
             # Compute current viewport size based on active zoom
             current_zoom = start_zoom if intro else zoom_current
-            vw = 1404
-            vh = 936
+            vw = 1728
+            vh = 1152
             intro_timer += dt
             if game.player is not None and game.master is not None:
                 mid_x = (game.player.rect.centerx + game.master.rect.centerx) / 2
@@ -137,7 +137,7 @@ while running:
                 camera.offset.x = mid_x - vw / 2
                 # Vertical alignment based on lowest final ground position
                 final_ground_y = max(ground_y_player, ground_y_master)
-                camera.offset.y = final_ground_y - vh + 50
+                camera.offset.y = final_ground_y - vh + 250
                 # Clamp only the upper bound so camera doesn't scroll past bottom of map
                 max_offset_y = HEIGHT - vh
                 if camera.offset.y > max_offset_y:
