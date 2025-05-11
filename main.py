@@ -1,4 +1,3 @@
-
 import pygame
 from game import Game
 from map import *
@@ -121,12 +120,15 @@ while running:
             intro_timer += dt
             if game.player is not None and game.master is not None:
                 mid_x = (game.player.rect.centerx + game.master.rect.centerx) / 2
-                mid_y = (game.player.rect.centery + game.master.rect.centery) / 2
+                # Horizontal centering between characters
                 camera.offset.x = mid_x - screen.get_width() / 2
-                camera.offset.y = mid_y - screen.get_height() / 2
-                # Clamp camera vertical offset to map bounds (stick to bottom of map)
+                # Vertical alignment based on lowest final ground position
+                final_ground_y = max(ground_y_player, ground_y_master)
+                camera.offset.y = final_ground_y - screen.get_height() + 50
+                # Clamp only the upper bound so camera doesn't scroll past bottom of map
                 max_offset_y = HEIGHT - screen.get_height()
-                camera.offset.y = max(0, min(camera.offset.y, max_offset_y))
+                if camera.offset.y > max_offset_y:
+                    camera.offset.y = max_offset_y
             if intro_timer >= intro_duration:
                 intro = False
         # Follow projectile immediately after firing
