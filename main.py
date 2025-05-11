@@ -23,7 +23,7 @@ pygame.mixer.music.play(-1)  # -1 = boucle infinie
 
 
 screen = pygame.display.set_mode((1080,720))
-camera = Camera(*screen.get_size())
+camera = Camera(1404,936)
 # Génération du sol
 
 background, terrain_mask = generate_map(WIDTH, HEIGHT, TILE_SIZE, map_selection(screen))
@@ -78,7 +78,7 @@ intro = True
 intro_timer = 0.0
 intro_duration = 3.0  # seconds of wide shot at game start
 start_zoom = 1.0
-end_zoom = 1.5
+end_zoom = 1.8
 zoom_current = start_zoom
 zoom_smooth_speed = 2.0
 
@@ -117,16 +117,20 @@ while running:
     if game.is_playing:
         # Intro wide shot before gameplay zoom and follow
         if intro:
+            # Compute current viewport size based on active zoom
+            current_zoom = start_zoom if intro else zoom_current
+            vw = 1404
+            vh = 936
             intro_timer += dt
             if game.player is not None and game.master is not None:
                 mid_x = (game.player.rect.centerx + game.master.rect.centerx) / 2
                 # Horizontal centering between characters
-                camera.offset.x = mid_x - screen.get_width() / 2
+                camera.offset.x = mid_x - vw / 2
                 # Vertical alignment based on lowest final ground position
                 final_ground_y = max(ground_y_player, ground_y_master)
-                camera.offset.y = final_ground_y - screen.get_height() + 50
+                camera.offset.y = final_ground_y - vh + 50
                 # Clamp only the upper bound so camera doesn't scroll past bottom of map
-                max_offset_y = HEIGHT - screen.get_height()
+                max_offset_y = HEIGHT - vh
                 if camera.offset.y > max_offset_y:
                     camera.offset.y = max_offset_y
             if intro_timer >= intro_duration:
@@ -146,7 +150,7 @@ while running:
 
     if game.is_playing:
         # Create a viewport surface to draw everything non-zoomed
-        viewport = pygame.Surface(screen.get_size())
+        viewport = pygame.Surface((vw, vh))
         viewport.fill((180, 230, 255))
 
         # Draw background at camera offset
@@ -225,7 +229,6 @@ while running:
             game.pressed[event.key] = True
 
             if event.key == pygame.K_RETURN and not intro:
-                  # Garder cette ligne si tu veux un autre mode de tir
                 if playing == "player" and game.player is not None:
                     game.player.launch_player_projectile(45)
                     playing = "master"
