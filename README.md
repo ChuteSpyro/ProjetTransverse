@@ -11,8 +11,6 @@
 5. [Installation](#installation)
 6. [How to Run](#how-to-run)
 7. [Technical Documentation](#technical-documentation)
-8. [Testing & Validation](#testing--validation)
-9. [Screenshots](#screenshots)
 
 ---
 
