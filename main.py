@@ -85,11 +85,10 @@ game.is_playing = True
 intro = True
 intro_timer = 0.0
 clock = pygame.time.Clock()
+pygame.mixer.music.stop()
+
 
 while running:
-
-    if game.is_playing :
-        pygame.mixer.music.stop()
 
     dt = clock.tick(60) / 1000.0
     # Camera logic runs only when the game has started
