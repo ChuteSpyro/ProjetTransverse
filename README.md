@@ -73,7 +73,7 @@ This project is a side‑scrolling artillery game featuring two **Players**. P
 3. **Install Pygame (seule dépendance externe)**
 
    ```bash
-   pip install pygame  # ou 'pip install pygame==2.1.3' pour une version spécifique
+   pip install pygame
    ```
 
 ---
