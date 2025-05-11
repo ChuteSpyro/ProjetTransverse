@@ -70,7 +70,7 @@ This project is a side‑scrolling artillery game featuring two **Players**. P
    # Windows
    .venv\Scripts\activate
    ```
-3. **Install Pygame (seule dépendance externe)**
+3. **Install Pygame (unique dependence)**
 
    ```bash
    pip install pygame
