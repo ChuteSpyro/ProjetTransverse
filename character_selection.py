@@ -30,10 +30,10 @@ confirm_hover_img = pygame.transform.scale(confirm_hover_img, (150, 60))
 confirm_clicked_img = pygame.transform.scale(confirm_clicked_img, (150, 60))
 
 # variable to know if the button has been clicked (to know if we need to change the color)
-confirm1_clicked = False  # état du bouton confirm1 (si cliqué ou non)
-confirm2_clicked = False  # état du bouton confirm2 (si cliqué ou non)
+confirm1_clicked = False  # state of confirm1 button(clicked or not)
+confirm2_clicked = False  # state of confirm2 button(clicked or not)
 
-# persos et armes
+# characters and weapons
 character_images = {
     "fleur": pygame.image.load("assets/characters/fleur.png"),
     "ghost": pygame.image.load("assets/characters/ghost.png"),
@@ -46,7 +46,7 @@ weapon_images = {
 characters = ["fleur", "ghost"]
 weapons = ["Axe", "dagger"]
 
-# === Fonction sélection persos + armes ===
+# === Function character + weapon selection ===
 def character_and_weapon_select(screen):
     global confirm1_clicked, confirm2_clicked
     p1_char, p1_weapon = 0, 0
@@ -64,25 +64,25 @@ def character_and_weapon_select(screen):
         y_char = HEIGHT * 0.2
         y_weapon = HEIGHT * 0.55
 
-        # === Définition des boutons en premier ===
+        # === Definition of buttons first ===
 
-        # Boutons J1
+        # Button J1
         left1_char = left_img.get_rect(topleft=(x1, y_char + 50))
         right1_char = right_img.get_rect(topleft=(x1 + 250, y_char + 50))
         confirm1 = confirm_img.get_rect(topleft=(x1 + 100, y_weapon + 220))
         left1_weapon = left_img.get_rect(topleft=(x1, y_weapon + 50))
         right1_weapon = right_img.get_rect(topleft=(x1 + 250, y_weapon + 50))
 
-        # Boutons J2
+        # Button J2
         left2_char = left_img.get_rect(topleft=(x2, y_char + 50))
         right2_char = right_img.get_rect(topleft=(x2 + 250, y_char + 50))
         confirm2 = confirm_img.get_rect(topleft=(x2 + 100, y_weapon + 220))
         left2_weapon = left_img.get_rect(topleft=(x2, y_weapon + 50))
         right2_weapon = right_img.get_rect(topleft=(x2 + 250, y_weapon + 50))
 
-        # === Affichage des éléments ===
+        # === Showing elements ===
 
-        # Joueur 1
+        # Player 1
         text1 = font.render("Player 1", True, (255, 255, 255))
         screen.blit(text1, (x1 + 100, y_char - 60))
         screen.blit(pygame.transform.scale(character_images[characters[p1_char]], (200, 200)), (x1 + 50, y_char))
@@ -100,7 +100,7 @@ def character_and_weapon_select(screen):
         screen.blit(left_img, left1_weapon.topleft)
         screen.blit(right_img, right1_weapon.topleft)
 
-        # Joueur 2
+        # Player 2
         text2 = font.render("Player 2", True, (255, 255, 255))
         screen.blit(text2, (x2 + 100, y_char - 60))
         screen.blit(pygame.transform.scale(character_images[characters[p2_char]], (200, 200)), (x2 + 50, y_char))
@@ -158,7 +158,7 @@ def character_and_weapon_select(screen):
         screen.blit(left_img, left2_weapon.topleft)
         screen.blit(right_img, right2_weapon.topleft)
 
-        # Affichage du bouton confirm2 avec l'état cliqué ou hover
+        # Display confirm2 button with hover or clicked state
         if confirm2_clicked:
             screen.blit(confirm_clicked_img, confirm2.topleft)
         elif confirm2.collidepoint((mx, my)):
@@ -179,7 +179,7 @@ def character_and_weapon_select(screen):
                 "player2": {"character": characters[p2_char], "weapon": weapons[p2_weapon]}
             }
 
-# === Fonction sélection de la map avec boutons image ===
+# === Map selection function with image buttons ===
 def map_selection(screen):
     pygame.display.set_caption("Choix de la map")
 
@@ -243,7 +243,7 @@ def map_selection(screen):
 
         pygame.display.flip()
 
-# === Lancement ===
+# === Launch ===
 if __name__ == "__main__":
     selections = character_and_weapon_select(screen)
     print("Sélections faites :", selections)

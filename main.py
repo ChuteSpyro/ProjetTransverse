@@ -1,4 +1,3 @@
-
 import pygame
 from game import Game
 from map import *
@@ -7,12 +6,18 @@ from character_selection import character_and_weapon_select, map_selection, weap
 from camera import Camera
 from accueil import afficher_accueil
 
+"""
+Main module for initializing and running the game loop, handling input,
+game state, physics, camera control, and rendering.
+"""
 
 pygame.init()
 
+# Initialize Pygame modules
+
 pygame.display.set_caption("Simple Game")
 
-#MAP
+# Map configuration constants
 WIDTH, HEIGHT = 6000, 720
 TILE_SIZE = 100
 
@@ -20,12 +25,12 @@ TILE_SIZE = 100
 SKY = (135, 206, 235)
 
 pygame.mixer.music.load("assets/sounds/Musique_de_fond.mp3")
-pygame.mixer.music.play(-1)  # -1 = boucle infinie
+pygame.mixer.music.play(-1)  # -1 = infinite loop playback
 
 
 screen = pygame.display.set_mode((1080,720))
 camera = Camera(1728,1152)
-# Génération du sol
+# Generate ground placeholder (banner setup follows)
 
 
 
@@ -43,7 +48,7 @@ play_button_rect.x = (screen.get_width() - play_button.get_width()) // 2 + 9
 play_button_rect.y = (screen.get_height() - banner.get_height()) // 2 + 300
 
 
-afficher_accueil(screen)  # Affiche le menu avant de démarrer le jeu
+afficher_accueil(screen)  # Display the main menu before starting the game
 selection = character_and_weapon_select(screen)
 
 game = Game(selection)
@@ -62,8 +67,8 @@ falling_master = True
 gravity = 981  # pixels per second squared
 
 
-# Variables pour le tir
-dragging = False  # Indique si on est en train de viser
+# Variables for aiming and shooting
+dragging = False  # Indicates if the player is currently aiming
 follow_projectile = False
 follow_timer = 0.0
 follow_target = None
@@ -88,7 +93,7 @@ intro_timer = 0.0
 clock = pygame.time.Clock()
 
 
-# Génération du sol
+# Generate terrain map and collision mask
 
 background, terrain_mask = generate_map(WIDTH, HEIGHT, TILE_SIZE, carte)
 game.terrain_mask = terrain_mask
@@ -104,10 +109,12 @@ ground_y_player = get_ground_y(game.player)
 ground_y_master = get_ground_y(game.master)
 
 pygame.mixer.music.set_volume(0.2)
+
+# Main game loop
 while running:
 
     dt = clock.tick(60) / 1000.0
-    # Handle falling characters
+    # Update character falling physics
     if falling_player:
         player_vy += gravity * dt
         game.player.rect.y += player_vy * dt
@@ -138,7 +145,6 @@ while running:
                 # Vertical alignment based on lowest final ground position
                 final_ground_y = max(ground_y_player, ground_y_master)
                 camera.offset.y = final_ground_y - vh + 250
-                # Clamp only the upper bound so camera doesn't scroll past bottom of map
                 max_offset_y = HEIGHT - vh
                 if camera.offset.y > max_offset_y:
                     camera.offset.y = max_offset_y
@@ -175,7 +181,7 @@ while running:
         # Draw game objects into viewport
         game.update(viewport, camera)
 
-            # Trajectory debug draw if dragging
+        # Trajectory debug draw if dragging
         # Trajectory preview
         if dragging:
             if playing == "player" and game.player is not None:
@@ -250,7 +256,6 @@ while running:
             game.pressed[event.key] = True
 
             if event.key == pygame.K_RETURN and not intro:
-                  # Garder cette ligne si tu veux un autre mode de tir
                 if playing == "player" and game.player is not None:
                     game.player.launch_player_projectile(45,selection['player1']['weapon'])
                     playing = "master"
@@ -265,9 +270,9 @@ while running:
             if play_button_rect.collidepoint(event.pos):
                 game.is_playing = True
             elif not intro:
-                # Début du tir
+                # Begin aiming on mouse button down
                 dragging = True
-                launch_pos = event.pos  # Enregistre la position de départ
+                launch_pos = event.pos  # Record the starting position of the drag
 
         elif event.type == pygame.MOUSEBUTTONUP and dragging and not intro:
             dragging = False
@@ -276,14 +281,14 @@ while running:
             if playing == "player" and game.player is not None:
                 p_origin_x, p_origin_y = game.player.rect.center
 
-                # Calculer la direction et la force du tir
+                # Calculate direction and power of the shot
                 world_x = release_pos[0] + camera.offset.x
                 world_y = release_pos[1] + camera.offset.y
                 dx = p_origin_x - world_x
                 dy = p_origin_y - world_y
                 angle = math.atan2(-dy, dx)
 
-                # Appliquer la vitesse au projectile du joueur
+                # Apply speed to player's projectile
                 distance = math.hypot(dx, dy)
                 power_ratio = min(distance / 300, 1.0)
                 speed = power_ratio * 90
@@ -301,14 +306,14 @@ while running:
             elif playing == "master" and game.master is not None:
                 m_origin_x, m_origin_y = game.master.rect.center
 
-                # Calculer la direction et la force du tir
+                # Calculate direction and power of the shot
                 world_x = release_pos[0] + camera.offset.x
                 world_y = release_pos[1] + camera.offset.y
                 dx = m_origin_x - world_x
                 dy = m_origin_y - world_y
                 angle = math.atan2(-dy, dx)
 
-                # Appliquer la vitesse au projectile du master
+                # Apply speed to master's projectile
                 distance = math.hypot(dx, dy)
                 power_ratio = min(distance / 300, 1.0)
                 speed = power_ratio * 90
