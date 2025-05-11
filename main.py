@@ -79,6 +79,7 @@ running = True
 playing = "player"
 
 
+
 carte = map_selection(screen)
 game.carte = carte
 game.is_playing = True
