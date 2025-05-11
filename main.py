@@ -49,18 +49,26 @@ game = Game()
 game.terrain_mask = terrain_mask
 
 
-def place_on_ground(sprite):
-    # on prend le centre horizontal du sprite
+
+# Position characters high in the sky for drop effect
+game.player.rect.y = -game.player.rect.height
+game.master.rect.y = -game.master.rect.height
+
+player_vy = 0.0
+master_vy = 0.0
+falling_player = True
+falling_master = True
+gravity = 981  # pixels per second squared
+
+def get_ground_y(sprite):
     x_center = sprite.rect.x + sprite.rect.width // 2
-    # on scanne du haut (y=0) jusqu'en bas (y=HEIGHT)
     for y in range(HEIGHT):
         if terrain_mask.get_at((x_center, y)):
-            # on met sur le sol:
-            sprite.rect.bottom = y
-            break
+            return y
+    return HEIGHT
 
-place_on_ground(game.player)
-place_on_ground(game.master)
+ground_y_player = get_ground_y(game.player)
+ground_y_master = get_ground_y(game.master)
 
 # Variables pour le tir
 dragging = False  # Indique si on est en train de viser
@@ -92,6 +100,21 @@ while running:
         pygame.mixer.music.stop()
 
     dt = clock.tick(60) / 1000.0
+    # Handle falling characters
+    if falling_player:
+        player_vy += gravity * dt
+        game.player.rect.y += player_vy * dt
+        if game.player.rect.bottom >= ground_y_player:
+            game.player.rect.bottom = ground_y_player
+            falling_player = False
+            player_vy = 0.0
+    if falling_master:
+        master_vy += gravity * dt
+        game.master.rect.y += master_vy * dt
+        if game.master.rect.bottom >= ground_y_master:
+            game.master.rect.bottom = ground_y_master
+            falling_master = False
+            master_vy = 0.0
     # Camera logic runs only when the game has started
     if game.is_playing:
         # Intro wide shot before gameplay zoom and follow
@@ -102,6 +125,9 @@ while running:
                 mid_y = (game.player.rect.centery + game.master.rect.centery) / 2
                 camera.offset.x = mid_x - screen.get_width() / 2
                 camera.offset.y = mid_y - screen.get_height() / 2
+                # Clamp camera vertical offset to map bounds (stick to bottom of map)
+                max_offset_y = HEIGHT - screen.get_height()
+                camera.offset.y = max(0, min(camera.offset.y, max_offset_y))
             if intro_timer >= intro_duration:
                 intro = False
         # Follow projectile immediately after firing
@@ -197,7 +223,7 @@ while running:
         elif event.type == pygame.KEYDOWN:
             game.pressed[event.key] = True
 
-            if event.key == pygame.K_RETURN:
+            if event.key == pygame.K_RETURN and not intro:
                   # Garder cette ligne si tu veux un autre mode de tir
                 if playing == "player" and game.player is not None:
                     game.player.launch_player_projectile(45)
@@ -212,12 +238,12 @@ while running:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if play_button_rect.collidepoint(event.pos):
                 game.is_playing = True
-            else:
+            elif not intro:
                 # Début du tir
                 dragging = True
                 launch_pos = event.pos  # Enregistre la position de départ
 
-        elif event.type == pygame.MOUSEBUTTONUP and dragging:
+        elif event.type == pygame.MOUSEBUTTONUP and dragging and not intro:
             dragging = False
             release_pos = event.pos
 
