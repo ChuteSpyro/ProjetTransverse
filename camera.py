@@ -1,34 +1,26 @@
-
-# camera.py
 import pygame
 
 class Camera:
     def __init__(self, width, height):
-        # how big is our viewport?
+        # Initialize viewport size and offset for world coordinates
         self.width = width
         self.height = height
-        # current top‐left world coordinate of the viewport
+        # Set offset vector for the top-left corner of the viewport
         self.offset = pygame.Vector2(0, 0)
-        self.smooth_speed = 3.0  # Speed factor for smooth camera movement
+        # Speed factor for smooth camera interpolation
+        self.smooth_speed = 3.0
 
     def apply(self, target_rect: pygame.Rect) -> pygame.Rect:
-        """Returns a rect shifted by the camera offset."""
+        # Apply the current camera offset to a rectangle, returning its screen position.
         return target_rect.move(-self.offset.x, -self.offset.y)
 
     def update(self, target: pygame.sprite.Sprite):
-        """
-        Center the camera on the target sprite.
-        Clamps can be added so you don't scroll past the level edges.
-        """
-        # try to center target on screen
+        # Instantly recenter the camera on the target sprite by adjusting the offset.
         self.offset.x = target.rect.centerx - self.width // 2
         self.offset.y = target.rect.centery - self.height // 2
-        # optional: clamp so offset.x stays within world bounds
-        # self.offset.x = max(0, min(self.offset.x, WORLD_WIDTH - self.width))
-        # self.offset.y = max(0, min(self.offset.y, WORLD_HEIGHT - self.height))
 
     def smooth_update(self, target: pygame.sprite.Sprite, dt: float):
-        """Smoothly move the camera towards the target sprite."""
+        # Smoothly interpolate the camera offset toward the target sprite based on delta time.
         desired = pygame.Vector2(
             target.rect.centerx - self.width // 2,
             target.rect.centery - self.height // 2

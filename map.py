@@ -49,7 +49,7 @@ def generate_map(width, height, tile_size,map_name):
         else:
             x = x_end
 
-    # Sol en bas de l'écran
+    # Ground at the bottom of the screen
     pygame.draw.rect(surface, DIRT, (0, height - tile_size, width, tile_size))
 
     mask = pygame.mask.from_surface(surface)

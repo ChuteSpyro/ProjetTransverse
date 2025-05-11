@@ -12,7 +12,7 @@ def afficher_accueil(screen):
     play_button = pygame.image.load("assets/buttons/play_button.png")
     play_button_hover = pygame.image.load("assets/buttons/button_play_hover.png")
 
-    #dimentions of the buttons
+    #dimension of the buttons
     play_button = pygame.transform.scale(play_button, (400,150))
     play_button_hover = pygame.transform.scale(play_button_hover, (400,150))
 
@@ -42,6 +42,7 @@ def afficher_accueil(screen):
         screen.blit(background, (0, 0))
 
         # Display hover effect if the mouse is over the button
+        # Show normal or hover button depending on the cursor position
         if play_button_rect.collidepoint((mx, my)):
             screen.blit(play_button_hover, play_button_rect)
         else:

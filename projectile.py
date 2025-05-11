@@ -1,12 +1,11 @@
-
 import pygame
 import math
-
 
 
 class Projectile(pygame.sprite.Sprite):
     def __init__(self, user,angle,selection,velocity):
         super().__init__()
+        # Initialize projectile properties: velocity, user reference, and select image based on weapon type
         self.velocity = velocity
         self.user = user
         if selection == 'dagger':
@@ -43,19 +42,21 @@ class Projectile(pygame.sprite.Sprite):
         self.user.all_projectiles.remove(self)
 
     def move(self,dt):
-        self.time += dt*8 # Incrémentation du temps
-        self.rect.x = self.start_x + self.velocity * math.cos(self.angle) * self.time #Ici, on calcule les cordonnées x et y du projectile et on associe l'image du projectile avec ces mêmes coordonnées.
+        # Increment time factor for motion calculations
+        self.time += dt*8
+        # Calculate x and y positions using kinematic equations
+        self.rect.x = self.start_x + self.velocity * math.cos(self.angle) * self.time
         self.rect.y = self.start_y - (self.velocity * math.sin(self.angle) * self.time - (0.5 * self.gravity * self.time ** 2))
-        #Ici, self.start correspond à la coordonnée à partir de laquelle notre projectile à été lancé (correspond à notre point d'origine)
-        #Les formules sont retrouvables en appliquant la seconde loi de newton pour un corps en chute libre avec une potision initiale (C'est de là que provient self.start), et cela nous donne les équations pour les coordonnées x et y.
-        #En utilisant la seconde loi de Newton, on néglige déliberemment le frottement de l'air.
+        # Apply Newton's second law for free-fall motion (ignoring air resistance)
+        # Rotate the projectile image for visual effect
         self.rotate()
+        # Make the projectile rotate during movement
         if self.counter >= 7:
             self.knife_sound.play()
             self.counter = 0
         self.counter += 1
 
-
+        # Check collision with player characters after a short flight duration
         for user in self.user.game.check_collision(self, self.user.game.all_player):
             if self.time > 3 :
                 self.pain_sound.play()
@@ -63,6 +64,7 @@ class Projectile(pygame.sprite.Sprite):
                 self.remove()
                 return
 
+        # Check collision with master characters after a short flight duration
         for user in self.user.game.check_collision(self, self.user.game.all_master):
             if self.time > 3 :
                 self.pain_sound.play()
@@ -70,6 +72,7 @@ class Projectile(pygame.sprite.Sprite):
                 self.remove()
                 return
 
+        # Handle collision with terrain: embed projectile and play impact sound
         terrain_mask = self.user.game.terrain_mask
         if terrain_mask:
             offset = (int(self.rect.x), int(self.rect.y))
@@ -81,5 +84,6 @@ class Projectile(pygame.sprite.Sprite):
 
                 return
 
+        # Remove projectile if it falls below the screen boundary
         if self.rect.y > 1080:
             self.remove()
