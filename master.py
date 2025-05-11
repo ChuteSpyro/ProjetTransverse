@@ -8,7 +8,7 @@ class Master(pygame.sprite.Sprite) :
         self.game = game
         self.health = 100
         self.max_health = 100
-        self.attack = 100
+        self.attack = 10
         self.all_projectiles = pygame.sprite.Group()
         # Load and scale character sprite based on selection choice
         # Handle 'fleur' character sprite loading and flip horizontally
